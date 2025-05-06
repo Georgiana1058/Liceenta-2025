@@ -1,0 +1,33 @@
+inspiratie youtube->https://www.youtube.com/watch?v=RiUh_8VTGYM&t=908s
+creeare proiect->react+vite
+client:
+https://vite.dev/guide/
+instalare tailwindcss/vite modern pentru aspect(css)
+https://ui.shadcn.com/docs/installation/vite ->modern (vite v4) cu @twailwindcss/vite(vite plugin)
+componente instalate:button,calendar si date
+
+pentru iconite dragute intra pe https://lucide.dev/
+
+https://reactrouter.com/6.30.0/start/tutorial -><Outlet/> din reactrouter te ajuta sa randeze pagina
+
+https://dashboard.clerk.com/apps/app_2w8sVbiq2WSyBLp3avyavNcSxvL/instances/ins_2w8sVcUUkMedfh3FXlJiejUbnnl-cred ca logare
+
+
+https://www.npmjs.com/package/uuid ->api pentru generare id-uri unice
+
+server:
+https://strapi.io/ ->nush la ce foloseste 
+
+pentru filtrarea cv-urilor doar dupa email-ul unic vom folosi
+
+https://aistudio.google.com/apikey ->am folosit ai-gemini pentru crearea descrierii la summery
+
+https://www.npmjs.com/package/react-simple-wysiwyg?activeTab=readme -> de aici am luat grid-ul cu unelete din WorkSummery --> se numeste rich text editor
+---------------------------
+MY CV :
+pentru a face print la cv am folosit functia din react print
+
+pentru a face share am folosit https://www.npmjs.com/package/react-web-share 
+
+
+
