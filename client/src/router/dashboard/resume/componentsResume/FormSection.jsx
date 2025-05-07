@@ -6,6 +6,7 @@ import Summery from './forms/Summery';
 import Experience from './forms/Experience';
 import Education from './forms/Education';
 import Skills from './forms/Skills';
+import Volunteering from './forms/Volunteering';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import ThemeColor from './ThemeColor';
 
@@ -48,16 +49,21 @@ function FormSection() {
 
 
       {/** Personal Detail */}
-      {activeFormIndex == 1 ? <PersonalDetail enableNext={(v) => setEnableNext(v)}
-      /> : activeFormIndex == 2 ?
+      {activeFormIndex === 1 ? (
+        <PersonalDetail enableNext={(v) => setEnableNext(v)} />
+      ) : activeFormIndex === 2 ? (
         <Summery enableNext={(v) => setEnableNext(v)} />
-        : activeFormIndex == 3 ? <Education enableNext={(v) => setEnableNext(v)} /> :
-          activeFormIndex == 4 ? <Skills enableNext={(v) => setEnableNext(v)} /> :
-            activeFormIndex == 5 ? <Experience enableNext={(v) => setEnableNext(v)} /> 
-            :activeFormIndex==6?
-            <Navigate to={'/my-resume/'+resumeId+'/view'}/>
-            
-            : null}
+      ) : activeFormIndex === 3 ? (
+        <Education enableNext={(v) => setEnableNext(v)} />
+      ) : activeFormIndex === 4 ? (
+        <Volunteering enableNext={(v) => setEnableNext(v)} />
+      ) : activeFormIndex === 5 ? (
+        <Skills enableNext={(v) => setEnableNext(v)} />
+      ) : activeFormIndex === 6 ? (
+        <Experience enableNext={(v) => setEnableNext(v)} />
+      ) : activeFormIndex === 7 ? (
+        <Navigate to={'/my-resume/'+resumeId+'/view'}/>
+      ) : null}
 
       {/** Summery */}
 

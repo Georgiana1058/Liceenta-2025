@@ -5,6 +5,7 @@ import SummeryPreview from '../componentsResume/preview/SummeryPreview';
 import ExperiencePreview from '../componentsResume/preview/ExperiencePreview';
 import EducationPreview from '../componentsResume/preview/EducationPreview';
 import SkillsPreview from '../componentsResume/preview/SkillsPreview';
+import VolunteeringPreview from '../componentsResume/preview/VolunteeringPreview';
 
 
 function ResumePreview() {
@@ -20,10 +21,13 @@ function ResumePreview() {
         <SummeryPreview resumeInfo={resumeInfo}/>
         {/** Education Detail */}
         <EducationPreview resumeInfo={resumeInfo}/>
+        {/** Volunteering */}
+        <VolunteeringPreview resumeInfo={resumeInfo}/>
         {/** Skills */}
         <SkillsPreview resumeInfo={resumeInfo}/>
          {/** Professional Experience */}
          <ExperiencePreview resumeInfo={resumeInfo}/>
+
 
 
     </div>

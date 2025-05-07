@@ -1,6 +1,8 @@
 import React from 'react'
 
 function ExperiencePreview({ resumeInfo }) {
+  if (!resumeInfo?.experience?.length) return null
+  
   return (
     <div className='my-6'>
       <h2

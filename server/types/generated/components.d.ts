@@ -106,6 +106,18 @@ export interface SkillsSkills extends Struct.ComponentSchema {
   };
 }
 
+export interface VolunteeringVolunteering extends Struct.ComponentSchema {
+  collectionName: 'components_volunteering_volunteerings';
+  info: {
+    displayName: 'volunteering';
+    icon: 'book';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -117,6 +129,7 @@ declare module '@strapi/strapi' {
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
       'skills.skills': SkillsSkills;
+      'volunteering.volunteering': VolunteeringVolunteering;
     }
   }
 }

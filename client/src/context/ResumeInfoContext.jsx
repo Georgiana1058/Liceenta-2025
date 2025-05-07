@@ -23,6 +23,7 @@ export function ResumeInfoProvider({ children }) {
     education:   [],        // componente repeatable
     skills:      [],
     experience:  [],
+    volunteering: [], // new section for volunteering
   };
 
   const [resumeInfo, setResumeInfo] = useState(defaultResume);

@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_volunteering_volunteerings",
+  "info": {
+    "displayName": "volunteering",
+    "icon": "book"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

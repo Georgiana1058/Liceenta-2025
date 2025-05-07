@@ -479,6 +479,7 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     userEmail: Schema.Attribute.Email;
     userName: Schema.Attribute.String;
+    volunteering: Schema.Attribute.Component<'volunteering.volunteering', true>;
   };
 }
 
