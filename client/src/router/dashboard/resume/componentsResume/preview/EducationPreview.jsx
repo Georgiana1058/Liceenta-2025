@@ -13,21 +13,18 @@ function EducationPreview({resumeInfo}) {
         <hr style={{
             borderColor:resumeInfo?.themeColor
         }}/>
-        {resumeInfo?.education.map((education,index)=>(
-            <div key={index} className='my-5'>
-                <h2  className='text-sm font-bold'
-                style={{
-                    color:resumeInfo?.themeColor
-                }}
-                >{education?.universityName} </h2>
-                <h2 className='text-xs flex justify-between'
-                >{education?.degree}  {education?.major}
-                <span>{education?.startDate} - {education?.endDate}</span>
-                </h2 >
-                <p className='text-xs my-2'
-                >{education?.description}</p>
-
-            </div>
+        {Array.isArray(resumeInfo?.education) &&
+        resumeInfo.education.map((education, index) => (
+          <div key={index} className="my-5">
+            <h2 className="text-sm font-bold" style={{ color: resumeInfo?.themeColor }}>
+              {education?.universityName}
+            </h2>
+            <h2 className="text-xs flex justify-between">
+              {education?.degree} - {education?.major}
+              <span>{education?.startDate} - {education?.endDate}</span>
+            </h2>
+            <p className="text-xs my-2">{education?.description}</p>
+          </div>
         ))}
 
 

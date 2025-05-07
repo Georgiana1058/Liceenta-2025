@@ -1,10 +1,10 @@
 import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import React, {useContext } from 'react';
-import PersonalDetailPreview from './preview/PersonalDetailPreview';
-import SummeryPreview from './preview/SummeryPreview';
-import ExperiencePreview from './preview/ExperiencePreview';
-import EducationPreview from './preview/EducationPreview';
-import SkillsPreview from './preview/SkillsPreview';
+import PersonalDetailPreview from '../componentsResume/preview/PersonalDetailPreview';
+import SummeryPreview from '../componentsResume/preview/SummeryPreview';
+import ExperiencePreview from '../componentsResume/preview/ExperiencePreview';
+import EducationPreview from '../componentsResume/preview/EducationPreview';
+import SkillsPreview from '../componentsResume/preview/SkillsPreview';
 
 
 function ResumePreview() {
@@ -18,12 +18,12 @@ function ResumePreview() {
         <PersonalDetailPreview resumeInfo={resumeInfo}/>
         {/** Summery */}
         <SummeryPreview resumeInfo={resumeInfo}/>
-        {/** Professional Experience */}
-        <ExperiencePreview resumeInfo={resumeInfo}/>
         {/** Education Detail */}
         <EducationPreview resumeInfo={resumeInfo}/>
         {/** Skills */}
         <SkillsPreview resumeInfo={resumeInfo}/>
+         {/** Professional Experience */}
+         <ExperiencePreview resumeInfo={resumeInfo}/>
 
 
     </div>

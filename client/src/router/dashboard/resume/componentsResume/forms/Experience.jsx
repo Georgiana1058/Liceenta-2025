@@ -24,42 +24,66 @@ export default function Experience() {
   const [experienceList, setExperienceList] = useState([emptyEntry])
   const [loading, setLoading] = useState(false)
 
-  // 1) la mount (sau când resumeInfo.experience se schimbă), hydrate din context
   useEffect(() => {
     if (Array.isArray(resumeInfo.experience) && resumeInfo.experience.length) {
       setExperienceList(resumeInfo.experience)
     }
   }, [resumeInfo.experience])
 
-  // 2) când modificăm vreun câmp simplu
   const handleChange = (idx, e) => {
     const { name, value } = e.target
     setExperienceList(list => {
       const copy = [...list]
       copy[idx] = { ...copy[idx], [name]: value }
+
+      // Actualizează contextul live:
+      setResumeInfo(prev => ({
+        ...prev,
+        experience: copy
+      }))
+
       return copy
     })
   }
 
-  // 3) când editorul rich text trimite summary-ul
   const handleRichTextEditor = (e, field, idx) => {
     const value = e.target.value
     setExperienceList(list => {
       const copy = [...list]
       copy[idx] = { ...copy[idx], [field]: value }
+
+      // Actualizează contextul live:
+      setResumeInfo(prev => ({
+        ...prev,
+        experience: copy
+      }))
+
       return copy
     })
   }
 
-  // 4) adaugă / elimină intrări
   const addEntry = () => {
-    setExperienceList(list => [...list, emptyEntry])
-  }
-  const removeEntry = () => {
-    setExperienceList(list => (list.length > 1 ? list.slice(0, -1) : list))
+    setExperienceList(list => {
+      const updated = [...list, emptyEntry]
+      setResumeInfo(prev => ({
+        ...prev,
+        experience: updated
+      }))
+      return updated
+    })
   }
 
-  // 5) la Salvare: trimite la API și apoi actualizează contextul
+  const removeEntry = () => {
+    setExperienceList(list => {
+      const updated = list.length > 1 ? list.slice(0, -1) : list
+      setResumeInfo(prev => ({
+        ...prev,
+        experience: updated
+      }))
+      return updated
+    })
+  }
+
   const onSave = () => {
     setLoading(true)
     const payload = {
@@ -143,7 +167,9 @@ export default function Experience() {
               index={idx}
               defaultValue={item.workSummery}
               positionTitle={item.title}
-              onRichTextEditorChange={e => handleRichTextEditor(e, 'workSummery', idx)}
+              onRichTextEditorChange={e =>
+                handleRichTextEditor(e, 'workSummery', idx)
+              }
             />
           </div>
         </div>

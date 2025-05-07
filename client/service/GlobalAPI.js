@@ -18,10 +18,21 @@ const GetResumeById=(id)=>axiosClient.get('/user-resumes/'+id+'?populate=*')
 
 const DeleteResumeById=(id)=>axiosClient.delete('/user-resumes/'+id)
 
+const GetResumePhoto = (id) =>
+    axiosClient.get('/user-resumes/'+id+'?populate=photoUrl');
+  
+
+const UploadFile = (formData) =>
+    axiosClient.post('/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
 export default{
     CreateNewResume,
     GetUserResumes,
     UpdateResumeDetail,
     GetResumeById,
     DeleteResumeById,
+    UploadFile,
+    GetResumePhoto,
 }

@@ -11,29 +11,30 @@ function ExperiencePreview({ resumeInfo }) {
       </h2>
       <hr style={{ borderColor: resumeInfo?.themeColor }} />
 
-      {resumeInfo?.experience.map((experience, index) => (
-        <div key={index} className='my-5'>
-          <h2
-            className='text-sm font-bold'
-            style={{ color: resumeInfo?.themeColor }}
-          >
-            {experience?.title}
-          </h2>
-          <h2 className='text-xs flex justify-between'>
-            {experience?.companyName}, {experience?.city} - {experience?.state}
-            <span>
-              {experience?.startDate}{' '}
-              {experience?.currentlyWorking ? 'Present' : experience.endDate}
-            </span>
-          </h2>
+      {Array.isArray(resumeInfo?.experience) &&
+  resumeInfo.experience.map((experience, index) => (
+    <div key={index} className='my-5'>
+      <h2
+        className='text-sm font-bold'
+        style={{ color: resumeInfo?.themeColor }}
+      >
+        {experience?.title}
+      </h2>
+      <h2 className='text-xs flex justify-between'>
+        {experience?.companyName}, {experience?.city} - {experience?.state}
+        <span>
+          {experience?.startDate}{' '}
+          {experience?.currentlyWorking ? 'Present' : experience?.endDate}
+        </span>
+      </h2>
 
-          {/* Aici facem font-ul descrierii mai mic și line-height mai înghesuit */}
-          <div
-            className="text-xs my-2"
-            dangerouslySetInnerHTML={{ __html: experience?.workSummery }}
-          />
-        </div>
-      ))}
+      <div
+        className="text-xs my-2"
+        dangerouslySetInnerHTML={{ __html: experience?.workSummery }}
+      />
+    </div>
+  ))}
+
     </div>
   )
 }

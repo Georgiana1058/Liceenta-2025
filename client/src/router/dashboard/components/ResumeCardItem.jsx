@@ -84,10 +84,12 @@ function ResumeCardItem({ resume, refreshData }) {
             <DropdownMenuItem onClick={() => navigate(`/dashboard/resume/${resume.documentId}/edit`)}>
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/dashboard/resume/${resume.documentId}/view`)}>
+            <DropdownMenuItem onClick={() => navigate(`/my-resume/${resume.documentId}/view`)
+}>
               View
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/dashboard/resume/${resume.documentId}/view`)}>
+            <DropdownMenuItem onClick={() =>navigate(`/my-resume/${resume.documentId}/view`)
+}>
               Download
             </DropdownMenuItem>
             <DropdownMenuItem onClick={e => { e.stopPropagation(); setOpenAlert(true) }}>

@@ -61,6 +61,22 @@
     },
     "themeColor": {
       "type": "string"
+    },
+    "photoUrl": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    },
+    "linkedin": {
+      "type": "text"
+    },
+    "github": {
+      "type": "text"
     }
   }
 }
