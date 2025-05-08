@@ -16,6 +16,12 @@ function ViewResume() {
         GetResumeInfo();
     }, []);
 
+    useEffect(() => {
+        if (resumeInfo?.themeColor) {
+          document.documentElement.style.setProperty('--bar-color', resumeInfo.themeColor);
+        }
+      }, [resumeInfo]);
+
     const GetResumeInfo = () => {
         GlobalAPI.GetResumeById(resumeId).then(resp => {
             console.log(resp.data.data);

@@ -26,6 +26,17 @@
     padding:0;
     box-shadow:none;
   }
+
+  @media print {
+    .skill-bar {
+      background-color: #e5e7eb !important;
+    }
+  
+    .skill-bar-fill {
+      background-color: var(--bar-color) !important;
+    }
+  }
+  
 }
 
 @page{

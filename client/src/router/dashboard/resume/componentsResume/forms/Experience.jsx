@@ -26,32 +26,35 @@ export default function Experience() {
 
   useEffect(() => {
     if (Array.isArray(resumeInfo?.experience)) {
-      setExperienceList(resumeInfo.experience)
+      const normalized = resumeInfo.experience.map(item => ({
+        ...item,
+        endDate: typeof item.endDate === 'string' ? item.endDate : ''
+      }))
+      setExperienceList(normalized)
     }
   }, [resumeInfo?.experience])
 
-  if (!resumeInfo) return null // prevenim crash-ul inainte de initializare
+  if (!resumeInfo) return null
 
   const handleChange = (idx, e) => {
     const { name, value } = e.target
-    setExperienceList(list => {
-      const updated = [...list]
-      updated[idx] = { ...updated[idx], [name]: value }
-      return updated
-    })
+    const updated = experienceList.map((item, i) =>
+      i === idx ? { ...item, [name]: value } : item
+    )
+    setExperienceList(updated)
+    setResumeInfo(prev => ({ ...prev, experience: updated }))
   }
 
   const handleRichTextEditor = (e, field, idx) => {
     const value = e.target.value
-    setExperienceList(list => {
-      const updated = [...list]
-      updated[idx] = { ...updated[idx], [field]: value }
-      return updated
-    })
+    const updated = [...experienceList]
+    updated[idx] = { ...updated[idx], [field]: value }
+    setExperienceList(updated)
+    setResumeInfo(prev => ({ ...prev, experience: updated }))
   }
 
   const addEntry = () => {
-    setExperienceList(list => [...list, emptyEntry])
+    setExperienceList(list => [...list, { ...emptyEntry }])
   }
 
   const removeEntry = () => {
@@ -64,7 +67,10 @@ export default function Experience() {
 
     const payload = {
       data: {
-        experience: cleanedList.map(({ id, ...rest }) => rest)
+        experience: cleanedList.map(({ id, ...rest }) => ({
+          ...rest,
+          endDate: rest.endDate || null
+        }))
       }
     }
 
@@ -90,27 +96,32 @@ export default function Experience() {
         <div key={idx} className="grid grid-cols-2 gap-3 border p-3 rounded-lg mb-4">
           <div>
             <label className="text-xs">Position Title</label>
-            <Input name="title" value={item.title} onChange={e => handleChange(idx, e)} />
+            <Input name="title" value={item.title ?? ''} onChange={e => handleChange(idx, e)} />
           </div>
           <div>
             <label className="text-xs">Company Name</label>
-            <Input name="companyName" value={item.companyName} onChange={e => handleChange(idx, e)} />
+            <Input name="companyName" value={item.companyName ?? ''} onChange={e => handleChange(idx, e)} />
           </div>
           <div>
             <label className="text-xs">City</label>
-            <Input name="city" value={item.city} onChange={e => handleChange(idx, e)} />
+            <Input name="city" value={item.city ?? ''} onChange={e => handleChange(idx, e)} />
           </div>
           <div>
             <label className="text-xs">State</label>
-            <Input name="state" value={item.state} onChange={e => handleChange(idx, e)} />
+            <Input name="state" value={item.state ?? ''} onChange={e => handleChange(idx, e)} />
           </div>
           <div>
             <label className="text-xs">Start Date</label>
-            <Input type="date" name="startDate" value={item.startDate} onChange={e => handleChange(idx, e)} />
+            <Input type="date" name="startDate" value={item.startDate ?? ''} onChange={e => handleChange(idx, e)} />
           </div>
           <div>
             <label className="text-xs">End Date</label>
-            <Input type="date" name="endDate" value={item.endDate} onChange={e => handleChange(idx, e)} />
+            <Input
+              type="date"
+              name="endDate"
+              value={typeof item.endDate === 'string' ? item.endDate : ''}
+              onChange={e => handleChange(idx, e)}
+            />
           </div>
 
           <div className="col-span-2">

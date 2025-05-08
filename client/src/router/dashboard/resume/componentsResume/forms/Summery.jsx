@@ -26,30 +26,37 @@ function Summery({ enableNext }) {
     const GenerateSummeryFromAI = async () => {
         setLoading(true);
         const prompt = `
-    Give 3 different professional 4-5 sentence summaries for a student based on this input: "${summery}".
-    Each version should sound confident, polished, and resume-appropriate.
-    Return them as a bullet list or JSON array.
+  You're a resume assistant helping a student write a professional Summary section for their CV.
+Given the raw input: "${summery}", generate 3 polished 3-4 sentence summaries.
+
+Each summary should:
+1. Start with who they are (e.g. Computer Science student),
+2. Mention 2-3 of their personal interests or hobbies (e.g. app development, tech volunteering),
+3. Include soft skills (e.g. problem-solving, communication),
+4. Finish with a short career goal (e.g. seeking internship opportunities).
+
+Return the output as a JSON array with "summary" keys only.
     `;
-    try {
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let text = await response.text();
-      
-        // 1. Eliminăm eventualul ```json sau ``` și whitespace
-        text = text.replace(/```json|```|\n/g, '');
-      
-        // 2. Parsăm JSON-ul
-        const suggestions = JSON.parse(text);
-      
-        // 3. Extragem textele propriu-zise (doar valoarea "summary")
-        const cleanedSuggestions = suggestions.map(item => item.summary);
-      
-        setAiGenerateSummeryList(cleanedSuggestions);
-        toast.success("AI suggestions ready!");
-      } catch (err) {
-        toast.error("Failed to generate suggestions.");
-        console.error(err);
-      }
+        try {
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            let text = await response.text();
+
+            // 1. Eliminăm eventualul ```json sau ``` și whitespace
+            text = text.replace(/```json|```|\n/g, '');
+
+            // 2. Parsăm JSON-ul
+            const suggestions = JSON.parse(text);
+
+            // 3. Extragem textele propriu-zise (doar valoarea "summary")
+            const cleanedSuggestions = suggestions.map(item => item.summary);
+
+            setAiGenerateSummeryList(cleanedSuggestions);
+            toast.success("AI suggestions ready!");
+        } catch (err) {
+            toast.error("Failed to generate suggestions.");
+            console.error(err);
+        }
         setLoading(false);
     };
 
@@ -72,20 +79,30 @@ function Summery({ enableNext }) {
             setLoading(false);
         });
     };
-    
-   
+
+
     return (
         <div>
             <div className='p-5 shadow-lg rounded-lg border-t-blue-900 border-t-4 mt-10'>
 
-                <h2 className='font-bold text-lg'>Summery</h2>
+                <h2 className='font-bold text-lg'>Summary (Interests & Objectives)</h2>
 
-                <p>Add description about your hobby</p>
 
                 <form className='mt-7' onSubmit={onSave}>
 
                     <div className='flex justify-between items-end'>
-                        <label>Add Summery</label>
+                        <label className="font-medium">
+                            
+                            <span className="block text-sm text-gray-500 mt-1 leading-snug">
+                                A good summary should include:
+                                <br />1. <strong>Who you are</strong> — your current status (e.g. Computer Science student at X University)
+                                <br />2. <strong>What you're passionate about</strong> — career-related fields or hobbies (e.g. web development, hackathons)
+                                <br />3. <strong>What you can do</strong> — key skills (e.g. problem-solving, teamwork)
+                                <br />4. <strong>What you are aiming for</strong> — your career goal (e.g. internship, part-time job)
+                            </span>
+                        </label>
+
+
                         <Button variant="outline" type="button" size="sm"
                             onClick={GenerateSummeryFromAI}
                             className="border-blue-900 text-primary flex gap-2">

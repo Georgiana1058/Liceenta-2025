@@ -19,15 +19,21 @@ function SkillsPreview({resumeInfo}) {
   resumeInfo.skills.map((skill, index) => (
     <div key={index} className="flex items-center justify-between">
       <h2 className="text-xs">{skill.name}</h2>
-      <div className="h-2 bg-gray-200 w-[120px]">
-        <div
-          className="h-2"
-          style={{
-            backgroundColor: resumeInfo?.themeColor,
-            width: skill?.rating * 20 + '%',
-          }}
-        ></div>
-      </div>
+      <div className="h-2 w-[120px] skill-bar">
+      <div className="h-2 w-[120px] skill-bar">
+      <div className="h-2 w-[120px] skill-bar">
+      <div className="h-2 w-[120px] border border-gray-300 skill-bar">
+  <div
+    className="h-full skill-bar-fill"
+    style={{
+      width: skill?.rating * 20 + '%',
+      backgroundColor: resumeInfo?.themeColor,
+    }}
+  ></div>
+</div>
+</div>
+</div>
+</div>
     </div>
 ))}
         </div>
