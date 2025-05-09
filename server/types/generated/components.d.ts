@@ -1,5 +1,23 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface CertificatesCertificates extends Struct.ComponentSchema {
+  collectionName: 'components_certificates_certificates';
+  info: {
+    description: '';
+    displayName: 'certificates';
+  };
+  attributes: {
+    certificateUrl: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    credentialUrl: Schema.Attribute.Text;
+    issuer: Schema.Attribute.String;
+    issuerDate: Schema.Attribute.Date;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface EducationEducation extends Struct.ComponentSchema {
   collectionName: 'components_education_educations';
   info: {
@@ -30,6 +48,33 @@ export interface ExperienceExperience extends Struct.ComponentSchema {
     state: Schema.Attribute.String;
     title: Schema.Attribute.String;
     workSummery: Schema.Attribute.Text;
+  };
+}
+
+export interface LanguagesLanguages extends Struct.ComponentSchema {
+  collectionName: 'components_languages_languages';
+  info: {
+    description: '';
+    displayName: 'languages';
+  };
+  attributes: {
+    languageName: Schema.Attribute.String;
+    proficiencyLevel: Schema.Attribute.Enumeration<
+      ['Beginner', 'Intermediate', 'B1', 'B2', 'C1', 'C2', 'Fluent', 'Native']
+    >;
+  };
+}
+
+export interface PortofolioPortofolio extends Struct.ComponentSchema {
+  collectionName: 'components_portofolio_portofolios';
+  info: {
+    displayName: 'portofolio';
+    icon: 'book';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    link: Schema.Attribute.Text;
+    projectTitle: Schema.Attribute.String;
   };
 }
 
@@ -121,8 +166,11 @@ export interface VolunteeringVolunteering extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'certificates.certificates': CertificatesCertificates;
       'education.education': EducationEducation;
       'experience.experience': ExperienceExperience;
+      'languages.languages': LanguagesLanguages;
+      'portofolio.portofolio': PortofolioPortofolio;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;

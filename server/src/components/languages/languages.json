@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_languages_languages",
+  "info": {
+    "displayName": "languages",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "languageName": {
+      "type": "string"
+    },
+    "proficiencyLevel": {
+      "type": "enumeration",
+      "enum": [
+        "Beginner",
+        "Intermediate",
+        "B1",
+        "B2",
+        "C1",
+        "C2",
+        "Fluent",
+        "Native"
+      ]
+    }
+  }
+}

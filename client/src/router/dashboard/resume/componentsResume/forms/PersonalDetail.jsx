@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import GlobalAPI from '../../../../../../service/GlobalAPI'
 import { toast } from 'sonner'
+import { getMediaId } from '@/lib/mediaUtils' // asigură-te că e corect importul
 
 function PersonalDetail({ enableNext }) {
   const params = useParams()
@@ -16,31 +17,30 @@ function PersonalDetail({ enableNext }) {
 
   useEffect(() => {
     GlobalAPI.GetResumeById(resumeId).then((res) => {
-      const allData = res.data.data.attributes || {};
-      const photo = allData?.photoUrl;
-  
+      const allData = res.data.data.attributes || {}
+      const photo = allData?.photoUrl
+
       setResumeInfo((prev) => ({
         ...prev,
         ...allData,
-      }));
-      
-  
-      if (!photo?.data?.attributes?.url) {
-        GlobalAPI.GetResumePhoto(resumeId).then((resImg) => {
-          const fallbackPhoto = resImg?.data?.data?.attributes?.photoUrl;
-          if (fallbackPhoto?.data?.attributes?.url) {
-            setResumeInfo((prev) => ({
-              ...prev,
-              photoUrl: fallbackPhoto,
-            }));
-          }
-        });
+      }))
+
+      // fallback pentru imagine dacă nu este complet populată
+      if (!photo?.url && photo?.data?.attributes?.url) {
+        setResumeInfo((prev) => ({
+          ...prev,
+          photoUrl: [
+            {
+              id: photo.data.id,
+              url: photo.data.attributes.url,
+              name: photo.data.attributes.name,
+            },
+          ],
+        }))
       }
-    });
-  }, []);
-  
-  
-  
+    })
+  }, [])
+
   const handleInputChange = (e) => {
     enableNext(false)
     const { name, value } = e.target
@@ -54,60 +54,71 @@ function PersonalDetail({ enableNext }) {
     })
   }
 
-  
-      
-      
-  
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-  
-    const formDataUpload = new FormData();
-    formDataUpload.append('files', file);
-  
+    const file = e.target.files[0]
+    if (!file) return
+
+    const formDataUpload = new FormData()
+    formDataUpload.append('files', file)
+
     try {
-      const response = await GlobalAPI.UploadFile(formDataUpload);
-      const uploadedImage = response.data[0]; // ← imaginea returnată de Strapi
-      const imageId = uploadedImage.id;
-  
-      // 1️⃣ Actualizează `formData` ca să poți salva imaginea în Strapi
-      setFormData((prev) => ({ ...prev, photoUrl: imageId }));
-  
-      // 2️⃣ Actualizează `resumeInfo` pentru PREVIEW live
+      const response = await GlobalAPI.UploadFile(formDataUpload)
+      const uploadedImage = response.data[0]
+
+      // salvează doar ID pentru trimitere în backend
+      setFormData((prev) => ({ ...prev, photoUrl: uploadedImage.id }))
+
+      // preview local
       setResumeInfo((prev) => ({
         ...prev,
         photoUrl: [
           {
+            id: uploadedImage.id,
             url: uploadedImage.url,
+            name: uploadedImage.name,
           },
         ],
-      }));
-  
-      toast.success('Image uploaded!');
-    } catch (error) {
-      toast.error('Image upload failed');
-    }
-  };
-  
+      }))
 
-  const onSave = (e) => {
+      toast.success('Image uploaded!')
+    } catch (error) {
+      toast.error('Image upload failed')
+    }
+  }
+  const onSave = async (e) => {
     e.preventDefault()
     setLoading(true)
+  
+    const imageId = getMediaId(formData.photoUrl) || getMediaId(resumeInfo.photoUrl)
+  
     const data = {
-      data: formData,
-    }
-    GlobalAPI.UpdateResumeDetail(params?.resumeId, data).then(
-      (resp) => {
-        console.log(resp)
-        enableNext(true)
-        setLoading(false)
-        toast('Details updated')
+      data: {
+        firstName: formData.firstName || resumeInfo.firstName,
+        lastName: formData.lastName || resumeInfo.lastName,
+        jobTitle: formData.jobTitle || resumeInfo.jobTitle,
+        address: formData.address || resumeInfo.address,
+        phone: formData.phone || resumeInfo.phone,
+        email: formData.email || resumeInfo.email,
+        linkedin: formData.linkedin || resumeInfo.linkedin,
+        github: formData.github || resumeInfo.github,
+        photoUrl: imageId,
       },
-      (error) => {
-        setLoading(false)
-      }
-    )
+    }
+  
+    console.log("Trimitem la Strapi:", data)
+  
+    try {
+      await GlobalAPI.UpdateResumeDetail(resumeId, data)
+      toast.success('Details updated!')
+      enableNext(true)
+    } catch (error) {
+      console.error('Eroare STRAPI:', error)
+      toast.error('Failed to update details')
+    } finally {
+      setLoading(false)
+    }
   }
+  
 
   return (
     <div className="p-5 shadow-lg rounded-lg border-t-blue-900 border-t-4 mt-10">
@@ -149,6 +160,12 @@ function PersonalDetail({ enableNext }) {
           <div className="col-span-2">
             <label className="text-sm">Upload Photo</label>
             <Input type="file" accept="image/*" onChange={handleImageUpload} />
+
+            {resumeInfo?.photoUrl?.[0]?.name && (
+              <p className="text-xs mt-1 text-gray-500">
+                Fișier existent: {resumeInfo.photoUrl[0].name}
+              </p>
+            )}
           </div>
 
           <div>

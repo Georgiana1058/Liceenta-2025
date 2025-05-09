@@ -24,6 +24,8 @@ export function ResumeInfoProvider({ children }) {
     skills:      [],
     experience:  [],
     volunteering: [], // new section for volunteering
+    languages:   [], // new section for languages
+    certificates: [], // new section for certificates
   };
 
   const [resumeInfo, setResumeInfo] = useState(defaultResume);

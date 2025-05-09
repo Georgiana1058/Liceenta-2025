@@ -34,6 +34,10 @@ export interface AdminApiToken extends Struct.CollectionTypeSchema {
         minLength: 1;
       }> &
       Schema.Attribute.DefaultTo<''>;
+    encryptedKey: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        minLength: 1;
+      }>;
     expiresAt: Schema.Attribute.DateTime;
     lastUsedAt: Schema.Attribute.DateTime;
     lifespan: Schema.Attribute.BigInteger;
@@ -446,6 +450,10 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
   };
   attributes: {
     address: Schema.Attribute.String;
+    certificates: Schema.Attribute.Component<'certificates.certificates', true>;
+    certificateUrl: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -455,6 +463,7 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
     firstName: Schema.Attribute.String;
     github: Schema.Attribute.Text;
     jobTitle: Schema.Attribute.String;
+    languages: Schema.Attribute.Component<'languages.languages', true>;
     lastName: Schema.Attribute.String;
     linkedin: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -468,6 +477,7 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    portofolio: Schema.Attribute.Component<'portofolio.portofolio', true>;
     publishedAt: Schema.Attribute.DateTime;
     resumeId: Schema.Attribute.String;
     skills: Schema.Attribute.Component<'skills.skills', true>;

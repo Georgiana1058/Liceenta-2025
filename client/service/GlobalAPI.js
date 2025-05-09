@@ -21,6 +21,11 @@ const DeleteResumeById=(id)=>axiosClient.delete('/user-resumes/'+id)
 const GetResumePhoto = (id) =>
     axiosClient.get('/user-resumes/'+id+'?populate=photoUrl');
   
+const GetResumeCertificatesFile = (id) =>
+    axiosClient.get(
+      `/user-resumes/${id}?populate[certificates][populate]=certificateFile`
+    )
+  
 
 const UploadFile = (formData) =>
     axiosClient.post('/upload', formData, {
@@ -35,4 +40,5 @@ export default{
     DeleteResumeById,
     UploadFile,
     GetResumePhoto,
+    GetResumeCertificatesFile,
 }

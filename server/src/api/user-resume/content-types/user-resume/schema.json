@@ -83,6 +83,32 @@
       "type": "component",
       "repeatable": true,
       "component": "volunteering.volunteering"
+    },
+    "languages": {
+      "type": "component",
+      "repeatable": true,
+      "component": "languages.languages"
+    },
+    "certificates": {
+      "type": "component",
+      "repeatable": true,
+      "component": "certificates.certificates"
+    },
+    "certificateUrl": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "portofolio": {
+      "type": "component",
+      "repeatable": true,
+      "component": "portofolio.portofolio"
     }
   }
 }

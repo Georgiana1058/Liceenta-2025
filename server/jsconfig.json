@@ -1,8 +1,10 @@
+// jsconfig.json
 {
   "compilerOptions": {
-    "target": "ES2021",
-    "checkJs": true,
-    "allowJs": true,
-    "moduleResolution": "node"
-  }
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
 }

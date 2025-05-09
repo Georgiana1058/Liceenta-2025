@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_certificates_certificates",
+  "info": {
+    "displayName": "certificates",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "issuer": {
+      "type": "string"
+    },
+    "issuerDate": {
+      "type": "date"
+    },
+    "certificateUrl": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "credentialUrl": {
+      "type": "text"
+    }
+  }
+}

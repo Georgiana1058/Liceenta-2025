@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_portofolio_portofolios",
+  "info": {
+    "displayName": "portofolio",
+    "icon": "book"
+  },
+  "options": {},
+  "attributes": {
+    "projectTitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "link": {
+      "type": "text"
+    }
+  }
+}
