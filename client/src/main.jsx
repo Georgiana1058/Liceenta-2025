@@ -9,6 +9,8 @@ import Dashboard from './router/dashboard/index.jsx'
 import { ClerkProvider } from '@clerk/clerk-react'
 import EditResume from './router/dashboard/resume/[resumeId]/edit/index.jsx'
 import ViewResume from './router/my-resume/[resumeId]/view/index.jsx'
+import Calendar from './router/calendar/Calendar.jsx'
+import Notifications from './router/notification/Notifications.jsx'
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -25,6 +27,14 @@ const router=createBrowserRouter([
     {
       path:'/dashboard',
       element:<Dashboard/>
+    },
+    {
+      path:'/dashboard/calendar',
+      element:<Calendar/>
+    },
+    {
+      path:'/dashboard/notifications',
+      element:<Notifications/>
     },
     { path:'/dashboard/resume/:resumeId/edit',
       element:<EditResume/>

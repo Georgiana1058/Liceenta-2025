@@ -12,8 +12,17 @@ function Header() {
       
       {isSignedIn ? (
         <div className="flex items-center gap-4">
+          <Link to={'/dashboard/calendar'}>
+          <Button className=" text-white hover:brightness-110">Calendar</Button>
+          </Link>
+          <Link to={'/dashboard/notifications'}>
+          <Button className=" text-white hover:brightness-110">Notifications</Button>
+          </Link>
           <Link to={'/dashboard'}>
           <Button className=" text-white hover:brightness-110">Dashboard</Button>
+          </Link>
+          <Link to={'/'}>
+          <Button className=" text-white hover:brightness-110">Home</Button>
           </Link>
           <UserButton />
         </div>
