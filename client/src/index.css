@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
 @custom-variant dark (&:is(.dark *));
 
 .rsw-ce ul {
@@ -13,20 +14,26 @@
   padding-left: 2em;
 }
 
-
-@media print{
-  #no-print{
-    display:none;
-  }
-  #print-area{
-    display:block;
-  }
-  body{
-    margin:0;
-    padding:0;
-    box-shadow:none;
+@media print {
+  /* Ascunde orice element din afara zonei de CV */
+  body * {
+    visibility: hidden !important;
   }
 
+  /* Arată numai CV-ul */
+  #print-area,
+  #print-area * {
+    visibility: visible !important;
+  }
+
+  /* Poziționează CV-ul sus, sus și ocupă toată lățimea */
+  #print-area {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
   @media print {
     .skill-bar {
       background-color: #e5e7eb !important;
@@ -37,7 +44,7 @@
     }
   }
   
-}
+
 
 @page{
   size:auto;

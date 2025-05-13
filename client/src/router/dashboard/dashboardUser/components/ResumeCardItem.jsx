@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import GlobalAPI from '../../../../service/GlobalAPI'
+import GlobalAPI from '../../../../../service/GlobalAPI'
 import { toast } from 'sonner'
 
 function ResumeCardItem({ resume, refreshData }) {

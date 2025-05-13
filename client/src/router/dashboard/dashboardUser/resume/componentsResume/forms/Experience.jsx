@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import GlobalAPI from '../../../../../../service/GlobalAPI'
+import GlobalAPI from "../../../../../../../service/GlobalAPI"
 import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import RichTextEditor from '../RichTextEditor'
 

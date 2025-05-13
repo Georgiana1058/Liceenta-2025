@@ -1,7 +1,7 @@
 import Header from '@/components/header-custom/Header'
 import { Button } from '@/components/ui/button'
 import { ResumeInfoContext } from '@/context/ResumeInfoContext'
-import ResumePreview from '@/router/dashboard/resume/componentsResume/ResumePreview'
+import ResumePreview from '@/router/dashboard/dashboardUser/resume/componentsResume/ResumePreview'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
@@ -37,7 +37,7 @@ function ViewResume() {
         <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
 
             <div id='no-print'>
-                <Header />
+                <Header/>
                 <div className='my-10 mx-10 md:mx-20 lg:mx-36'>
                     <h2 className='text-center text-2xl font-medium'>Congrats! Your Ultimate Completed Resume is ready !</h2>
                     <p className='text-center text-gray-400'>Now are ready to download your resume and you can share unique resume url with your friend and family </p>

@@ -1,3 +1,4 @@
+// vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -11,13 +12,17 @@ export default defineConfig({
     },
   },
   server: {
-    host: 'localhost',  // sau '0.0.0.0' dacă ai nevoie de acces din WSL/Docker/alt dispozitiv
+    host: 'localhost',
     port: 5173,
+    allowedHosts: ['a814-5-14-132-204.ngrok-free.app'],
     hmr: {
-      protocol: 'ws',       // 'ws' pentru HTTP, 'wss' pentru HTTPS
-      host: 'localhost',    // sau IP‑ul tău local/LAN
+      overlay: false, // dezactiveaza erorile de tip overlay (care pot bloca UI-ul)
+      protocol: 'ws',
+      host: 'localhost',
       port: 5173,
-      // path: '/hmr'       // doar dacă ai customizat calea
-    }
-  }
+    },
+    watch: {
+      ignored: ['**/node_modules/**', '**/.git/**'],
+    },
+  },
 })

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { LoaderCircle } from 'lucide-react'
 import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import { toast } from 'sonner'
-import GlobalAPI from '../../../../../../service/GlobalAPI'
+import GlobalAPI from "../../../../../../../service/GlobalAPI"
 
 export default function Skills() {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)

@@ -1,26 +1,15 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { useState, useEffect } from 'react'
-import { Calendar } from "@/components/ui/calendar"
-import { Navigate, Outlet } from 'react-router-dom'
-import { useUser } from '@clerk/clerk-react'
-import Header from './components/header-custom/Header'
+import React from 'react'
+import { Outlet }  from 'react-router-dom'
 import { Toaster } from './components/ui/sonner'
+import ClerkSyncToStrapi from './router/auth/ClerkSyncToStrapi'
+import { useUser } from '@clerk/clerk-react';
 
 export default function App() {
-  const [count, setCount] = useState(0)
-  const { user, isLoaded, isSignedIn } = useUser()
-
-
-  if (!isSignedIn && isLoaded) {
-    return <Navigate to="/auth/sign-in" />
-  }
-
+  const { isSignedIn } = useUser();
   return (
     <>
-      <Header/>
-      <Outlet />
+   <ClerkSyncToStrapi />
+      <Outlet />   
       <Toaster />
     </>
   )

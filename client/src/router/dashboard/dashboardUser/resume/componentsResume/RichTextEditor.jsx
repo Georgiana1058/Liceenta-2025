@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import { Brain, LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import model from '../../../../../service/AIModal'
+import model from '../../../../../../service/AIModal'
 import {
   Editor,
   EditorProvider,

@@ -4,7 +4,8 @@ import FormSection from '../../componentsResume/FormSection';
 import ResumePreview from '../../componentsResume/ResumePreview';
 import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import dummy from '@/router/data/dummy';
-import GlobalAPI from '../../../../../../service/GlobalAPI';
+import GlobalAPI from '../../../../../../../service/GlobalAPI';
+import Header from '@/components/header-custom/Header';
 
 function EditResume() {
   const {resumeId} = useParams();
@@ -23,6 +24,7 @@ function EditResume() {
 
   return (
     <ResumeInfoContext.Provider value={{resumeInfo,setResumeInfo}} >
+      <Header/>
       <div className='grid grid-cols-1 md:grid-cols-2 p-10 gap-10'>
       {/** Form Section */}
       <FormSection/>

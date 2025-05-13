@@ -4,7 +4,7 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import { LoaderCircle } from 'lucide-react'
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import GlobalAPI from '../../../../../../service/GlobalAPI'
+import GlobalAPI from "../../../../../../../service/GlobalAPI"
 import { toast } from 'sonner'
 import { getMediaId } from '@/lib/mediaUtils' // asigură-te că e corect importul
 
@@ -85,36 +85,40 @@ function PersonalDetail({ enableNext }) {
       toast.error('Image upload failed')
     }
   }
-
-  const onSave = (e) => {
+  const onSave = async (e) => {
     e.preventDefault()
     setLoading(true)
-
+  
     const imageId = getMediaId(formData.photoUrl) || getMediaId(resumeInfo.photoUrl)
-
+  
     const data = {
       data: {
-        ...resumeInfo,
-        ...formData,
+        firstName: formData.firstName || resumeInfo.firstName,
+        lastName: formData.lastName || resumeInfo.lastName,
+        jobTitle: formData.jobTitle || resumeInfo.jobTitle,
+        address: formData.address || resumeInfo.address,
+        phone: formData.phone || resumeInfo.phone,
+        email: formData.email || resumeInfo.email,
+        linkedin: formData.linkedin || resumeInfo.linkedin,
+        github: formData.github || resumeInfo.github,
         photoUrl: imageId,
       },
     }
-
+  
     console.log("Trimitem la Strapi:", data)
-
-    GlobalAPI.UpdateResumeDetail(resumeId, data).then(
-      (resp) => {
-        toast.success('Details updated')
-        enableNext(true)
-        setLoading(false)
-      },
-      (error) => {
-        toast.error('Failed to update details')
-        console.error(error)
-        setLoading(false)
-      }
-    )
+  
+    try {
+      await GlobalAPI.UpdateResumeDetail(resumeId, data)
+      toast.success('Details updated!')
+      enableNext(true)
+    } catch (error) {
+      console.error('Eroare STRAPI:', error)
+      toast.error('Failed to update details')
+    } finally {
+      setLoading(false)
+    }
   }
+  
 
   return (
     <div className="p-5 shadow-lg rounded-lg border-t-blue-900 border-t-4 mt-10">

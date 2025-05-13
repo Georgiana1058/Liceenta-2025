@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
-import GlobalAPI from "../../../../../../service/GlobalAPI";
+import GlobalAPI from "../../../../../../../service/GlobalAPI";
 import { Plus, Trash2, Upload, LoaderCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";

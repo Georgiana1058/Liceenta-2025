@@ -28,7 +28,12 @@ MY CV :
 pentru a face print la cv am folosit functia din react print
 
 pentru a face share am folosit https://www.npmjs.com/package/react-web-share 
+------------------------------
+pentru a salva toate conturile din clerck in strapi am folosit ngrok https://dashboard.ngrok.com/get-started/your-authtoken comanda ngrok http 1337
 
+https://dashboard.clerk.com/apps/app_2w8sVbiq2WSyBLp3avyavNcSxvL/instances/ins_2w8sVcUUkMedfh3FXlJiejUbnnl/users
+
+https://console.cloud.google.com/auth/clients?inv=1&invt=AbxLrw&project=clerk-sso-459609
 
 ----------------------------------------
 dupa ce termini aplicatia sa o randezi aici

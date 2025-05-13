@@ -5,8 +5,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Brain, LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import GlobalAPI from '../../../../../../service/GlobalAPI'
-import model from '../../../../../../service/AIModal'
+import GlobalAPI from "../../../../../../../service/GlobalAPI"
+import model from '../../../../../../../service/AIModal'
 import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 
 const emptyVolunteering = {

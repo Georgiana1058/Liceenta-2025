@@ -11,11 +11,13 @@ import Languages from './forms/Languages';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import ThemeColor from './ThemeColor';
 import Certificates from './forms/Certificates';
+import Portofolio from './forms/Portofolio';
+
 
 function FormSection() {
   const [activeFormIndex, setActiveFormIndex] = useState(1);
   const [enableNext, setEnableNext] = useState(false)
-  const {resumeId}=useParams();
+  const { resumeId } = useParams();
 
   return (
     <div>
@@ -26,8 +28,8 @@ function FormSection() {
               <Home className="w-4 h-4" />
             </Button>
           </Link>
-          <ThemeColor/>
-         
+          <ThemeColor />
+
         </div>
 
 
@@ -52,23 +54,25 @@ function FormSection() {
 
       {/** Personal Detail */}
       {activeFormIndex === 1 ? (
-        <PersonalDetail enableNext={(v) => setEnableNext(v)} />
+        <PersonalDetail enableNext={v => setEnableNext(v)} />
       ) : activeFormIndex === 2 ? (
-        <Summery enableNext={(v) => setEnableNext(v)} />
+        <Summery enableNext={v => setEnableNext(v)} />
       ) : activeFormIndex === 3 ? (
-        <Education enableNext={(v) => setEnableNext(v)} />
+        <Education enableNext={v => setEnableNext(v)} />
       ) : activeFormIndex === 4 ? (
-        <Volunteering enableNext={(v) => setEnableNext(v)} />
+        <Experience enableNext={v => setEnableNext(v)} />
       ) : activeFormIndex === 5 ? (
-        <Skills enableNext={(v) => setEnableNext(v)} />
+        <Portofolio enableNext={v => setEnableNext(v)} />
       ) : activeFormIndex === 6 ? (
-        <Languages enableNext={(v) => setEnableNext(v)} />
+        <Skills enableNext={v => setEnableNext(v)} />
       ) : activeFormIndex === 7 ? (
-        <Certificates enableNext={(v) => setEnableNext(v)} />
+        <Certificates enableNext={v => setEnableNext(v)} />
       ) : activeFormIndex === 8 ? (
-          <Experience enableNext={(v) => setEnableNext(v)} />
+        <Languages enableNext={v => setEnableNext(v)} />
       ) : activeFormIndex === 9 ? (
-        <Navigate to={'/my-resume/'+resumeId+'/view'}/>
+        <Volunteering enableNext={v => setEnableNext(v)} />
+      ) : activeFormIndex === 10 ? (
+        <Navigate to={`/my-resume/${resumeId}/view`} />
       ) : null}
 
       {/** Summery */}

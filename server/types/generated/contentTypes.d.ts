@@ -451,9 +451,6 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
   attributes: {
     address: Schema.Attribute.String;
     certificates: Schema.Attribute.Component<'certificates.certificates', true>;
-    certificateUrl: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -477,7 +474,6 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    portofolio: Schema.Attribute.Component<'portofolio.portofolio', true>;
     publishedAt: Schema.Attribute.DateTime;
     resumeId: Schema.Attribute.String;
     skills: Schema.Attribute.Component<'skills.skills', true>;
@@ -948,10 +944,10 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    clerkUserId: Schema.Attribute.String;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;

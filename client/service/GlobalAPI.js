@@ -32,6 +32,11 @@ const UploadFile = (formData) =>
       headers: { 'Content-Type': 'multipart/form-data' },
     });
 
+const GetUsersByClerkId = clerkUserId =>
+    axiosClient.get(
+      `/users?filters[clerkUserId][$eq]=${clerkUserId}&populate=role`
+    );
+
 export default{
     CreateNewResume,
     GetUserResumes,
@@ -41,4 +46,5 @@ export default{
     UploadFile,
     GetResumePhoto,
     GetResumeCertificatesFile,
+    GetUsersByClerkId,
 }

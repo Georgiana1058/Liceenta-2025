@@ -3,10 +3,10 @@ import { Textarea } from '@/components/ui/textarea'
 import React, { useContext, useState, useEffect } from 'react'
 import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { useParams } from 'react-router-dom'
-import GlobalAPI from '../../../../../../service/GlobalAPI'
+import GlobalAPI from "../../../../../../../service/GlobalAPI"
 import { Brain, LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import model from '../../../../../../service/AIModal'
+import model from '../../../../../../../service/AIModal'
 
 
 
