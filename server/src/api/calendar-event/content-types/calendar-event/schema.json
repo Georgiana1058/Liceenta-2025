@@ -1,0 +1,82 @@
+{
+  "kind": "collectionType",
+  "collectionName": "calendar_events",
+  "info": {
+    "singularName": "calendar-event",
+    "pluralName": "calendar-events",
+    "displayName": "calendar-event",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "startTime": {
+      "type": "datetime"
+    },
+    "endTime": {
+      "type": "datetime"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "interview",
+        "meeting",
+        "other"
+      ]
+    },
+    "statusEvent": {
+      "type": "enumeration",
+      "enum": [
+        "scheduled",
+        "completed",
+        "canceled"
+      ]
+    },
+    "participants": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "events",
+      "onDelete": "cascade"
+    },
+    "organizer": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "calendar_organizer",
+      "onDelete": "cascade"
+    },
+    "location": {
+      "type": "text"
+    },
+    "isOnline": {
+      "type": "boolean"
+    },
+    "meetingLink": {
+      "type": "text"
+    },
+    "cv": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cv.cv",
+      "inversedBy": "calendar_events",
+      "onDelete": "cascade"
+    },
+    "modificationRequest": {
+      "type": "boolean"
+    },
+    "suggestedTimes": {
+      "type": "json"
+    },
+    "modificationContext": {
+      "type": "text"
+    }
+  }
+}

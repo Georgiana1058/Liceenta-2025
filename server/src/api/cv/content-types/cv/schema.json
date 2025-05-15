@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cvs",
+  "info": {
+    "singularName": "cv",
+    "pluralName": "cvs",
+    "displayName": "cv",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "blocks"
+    },
+    "isApproved": {
+      "type": "boolean"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "cvs"
+    },
+    "skills": {
+      "type": "json"
+    },
+    "experince": {
+      "type": "json"
+    },
+    "education": {
+      "type": "json"
+    },
+    "languages": {
+      "type": "json"
+    },
+    "certification": {
+      "type": "json"
+    },
+    "calendar_events": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::calendar-event.calendar-event",
+      "mappedBy": "cv"
+    },
+    "soucerResume": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::user-resume.user-resume",
+      "inversedBy": "appreovedCVs"
+    }
+  }
+}

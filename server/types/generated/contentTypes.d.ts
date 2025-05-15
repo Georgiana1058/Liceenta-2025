@@ -405,6 +405,141 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCalendarEventCalendarEvent
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'calendar_events';
+  info: {
+    description: '';
+    displayName: 'calendar-event';
+    pluralName: 'calendar-events';
+    singularName: 'calendar-event';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    cv: Schema.Attribute.Relation<'manyToOne', 'api::cv.cv'>;
+    description: Schema.Attribute.Text;
+    endTime: Schema.Attribute.DateTime;
+    isOnline: Schema.Attribute.Boolean;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::calendar-event.calendar-event'
+    > &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.Text;
+    meetingLink: Schema.Attribute.Text;
+    modificationContext: Schema.Attribute.Text;
+    modificationRequest: Schema.Attribute.Boolean;
+    organizer: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    participants: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    startTime: Schema.Attribute.DateTime;
+    statusEvent: Schema.Attribute.Enumeration<
+      ['scheduled', 'completed', 'canceled']
+    >;
+    suggestedTimes: Schema.Attribute.JSON;
+    title: Schema.Attribute.String;
+    type: Schema.Attribute.Enumeration<['interview', 'meeting', 'other']>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiCompanyAnnouncementCompanyAnnouncement
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'company_announcements';
+  info: {
+    description: '';
+    displayName: 'company-announcement';
+    pluralName: 'company-announcements';
+    singularName: 'company-announcement';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    content: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    expiryDate: Schema.Attribute.Date;
+    isActive: Schema.Attribute.Boolean;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::company-announcement.company-announcement'
+    > &
+      Schema.Attribute.Private;
+    priority: Schema.Attribute.Enumeration<['urgent', 'normal', 'low']>;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiCvCv extends Struct.CollectionTypeSchema {
+  collectionName: 'cvs';
+  info: {
+    description: '';
+    displayName: 'cv';
+    pluralName: 'cvs';
+    singularName: 'cv';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    calendar_events: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::calendar-event.calendar-event'
+    >;
+    certification: Schema.Attribute.JSON;
+    content: Schema.Attribute.Blocks;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    education: Schema.Attribute.JSON;
+    experince: Schema.Attribute.JSON;
+    isApproved: Schema.Attribute.Boolean;
+    languages: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::cv.cv'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    skills: Schema.Attribute.JSON;
+    soucerResume: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::user-resume.user-resume'
+    >;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   collectionName: 'globals';
   info: {
@@ -450,6 +585,7 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
   };
   attributes: {
     address: Schema.Attribute.String;
+    appreovedCVs: Schema.Attribute.Relation<'oneToOne', 'api::cv.cv'>;
     certificates: Schema.Attribute.Component<'certificates.certificates', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -947,17 +1083,30 @@ export interface PluginUsersPermissionsUser
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    calendar_organizer: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::calendar-event.calendar-event'
+    >;
     clerkUserId: Schema.Attribute.String;
+    company_announcements: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::company-announcement.company-announcement'
+    >;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    cvs: Schema.Attribute.Relation<'oneToMany', 'api::cv.cv'>;
     email: Schema.Attribute.Email &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    events: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::calendar-event.calendar-event'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -999,6 +1148,9 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::author.author': ApiAuthorAuthor;
+      'api::calendar-event.calendar-event': ApiCalendarEventCalendarEvent;
+      'api::company-announcement.company-announcement': ApiCompanyAnnouncementCompanyAnnouncement;
+      'api::cv.cv': ApiCvCv;
       'api::global.global': ApiGlobalGlobal;
       'api::user-resume.user-resume': ApiUserResumeUserResume;
       'plugin::content-releases.release': PluginContentReleasesRelease;

@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import FormSection from '../../componentsResume/FormSection';
 import ResumePreview from '../../componentsResume/ResumePreview';
 import { ResumeInfoContext } from '@/context/ResumeInfoContext';
-import dummy from '@/router/data/dummy';
 import GlobalAPI from '../../../../../../../service/GlobalAPI';
 import Header from '@/components/header-custom/Header';
 

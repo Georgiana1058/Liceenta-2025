@@ -15,11 +15,11 @@ import SignUpPage from './router/auth/sign-up'
 import Dashboard from './router/dashboard/dashboardUser'
 import DashboardCompany from './router/dashboard/dashboardCompany'
 import DashboardAdmin from './router/dashboard/dashboardAdmin'
-import Calendar from './router/calendar/Calendar'
 import Notifications from './router/notification/Notifications'
 import EditResume from './router/dashboard/dashboardUser/resume/[resumeId]/edit'
 import ViewResume from './router/my-resume/[resumeId]/view'
 import ProtectedRoute from './components/protected-route/ProtectedRoute'
+import UserCalendar from './router/calendar/Calendar'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
       {
         path: 'dashboard/company',
         element: (
-          <ProtectedRoute allowedRoles={['company', 'admin']}>
+          <ProtectedRoute allowedRoles={['company']}>
             <DashboardCompany />
           </ProtectedRoute>
         ),
@@ -63,11 +63,12 @@ const router = createBrowserRouter([
       {
         path: 'dashboard/calendar',
         element: (
-          <ProtectedRoute allowedRoles={['user', 'company', 'admin']}>
-            <Calendar />
+          <ProtectedRoute allowedRoles={['user', 'company']}>
+            <UserCalendar />
           </ProtectedRoute>
         ),
       },
+      
       {
         path: 'dashboard/notifications',
         element: (
@@ -79,7 +80,7 @@ const router = createBrowserRouter([
       {
         path: 'dashboard/resume/:resumeId/edit',
         element: (
-          <ProtectedRoute allowedRoles={['user', 'company', 'admin']}>
+          <ProtectedRoute allowedRoles={['user']}>
             <EditResume />
           </ProtectedRoute>
         ),

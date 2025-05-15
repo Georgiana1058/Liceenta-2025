@@ -1,7 +1,15 @@
 module.exports = [
   'strapi::errors',
   'strapi::security',
-  'strapi::cors',
+  {
+    name: 'strapi::cors',
+    config: {
+      origin: ['http://localhost:5173'],
+      headers: '*',
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      credentials: true,
+    },
+  },
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
@@ -10,7 +18,7 @@ module.exports = [
     config: {
       jsonLimit: '10mb',
       formLimit: '10mb',
-      enableRawBody: true,    // ← asigură-te că e aici
+      enableRawBody: true,
     },
   },
   'strapi::session',

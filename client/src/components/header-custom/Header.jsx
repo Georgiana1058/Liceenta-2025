@@ -20,8 +20,8 @@ export default function Header() {
     role === 'admin'
       ? '/dashboard/admin'
       : role === 'company'
-      ? '/dashboard/company'
-      : '/dashboard'
+        ? '/dashboard/company'
+        : '/dashboard'
 
   return (
     <header className="w-full flex justify-between items-center shadow-md p-2 px-4 min-h-[80px] bg-transparent">
@@ -35,13 +35,13 @@ export default function Header() {
           className="cursor-pointer"
         />
       </Link>
-
-      {/* meniul */}
       {isSignedIn ? (
         <nav className="flex items-center gap-4">
-          <Link to="/dashboard/calendar">
-            <Button className="text-white hover:brightness-110">Calendar</Button>
-          </Link>
+          {(role === 'user' || role === 'company') && (
+            <Link to="/dashboard/calendar">
+              <Button className="text-white hover:brightness-110">Calendar</Button>
+            </Link>
+          )}
           <Link to="/dashboard/notifications">
             <Button className="text-white hover:brightness-110">Notifications</Button>
           </Link>
@@ -54,12 +54,15 @@ export default function Header() {
           <UserButton />
         </nav>
       ) : (
-        <Link to="/auth/sign-up">
+        <Link to="/auth/sign-in">
           <Button className="text-white hover:brightness-110 h-10 text-sm px-3 py-1">
             Get Started
           </Button>
         </Link>
       )}
+
+      {/* meniul */}
+
     </header>
   )
 }

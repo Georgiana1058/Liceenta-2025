@@ -67,6 +67,30 @@
     },
     "clerkUserId": {
       "type": "string"
+    },
+    "events": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::calendar-event.calendar-event",
+      "mappedBy": "participants"
+    },
+    "company_announcements": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::company-announcement.company-announcement",
+      "mappedBy": "users_permissions_user"
+    },
+    "calendar_organizer": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::calendar-event.calendar-event",
+      "mappedBy": "organizer"
+    },
+    "cvs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::cv.cv",
+      "mappedBy": "user"
     }
   }
 }

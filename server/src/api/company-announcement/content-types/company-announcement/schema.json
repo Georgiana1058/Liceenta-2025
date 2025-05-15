@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "company_announcements",
+  "info": {
+    "singularName": "company-announcement",
+    "pluralName": "company-announcements",
+    "displayName": "company-announcement",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "company_announcements"
+    },
+    "isActive": {
+      "type": "boolean"
+    },
+    "expiryDate": {
+      "type": "date"
+    },
+    "priority": {
+      "type": "enumeration",
+      "enum": [
+        "urgent",
+        "normal",
+        "low"
+      ]
+    }
+  }
+}
