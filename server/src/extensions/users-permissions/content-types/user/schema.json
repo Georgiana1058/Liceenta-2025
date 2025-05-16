@@ -91,6 +91,18 @@
       "relation": "oneToMany",
       "target": "api::cv.cv",
       "mappedBy": "user"
+    },
+    "notifications_participant": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::notification.notification",
+      "mappedBy": "participant"
+    },
+    "notifications_organizator": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::notification.notification",
+      "mappedBy": "organizer"
     }
   }
 }

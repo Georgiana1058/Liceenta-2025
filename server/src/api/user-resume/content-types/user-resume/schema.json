@@ -99,6 +99,34 @@
       "relation": "oneToOne",
       "target": "api::cv.cv",
       "mappedBy": "soucerResume"
+    },
+    "isApproved": {
+      "type": "boolean"
+    },
+    "ratingResume": {
+      "type": "integer"
+    },
+    "notifications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::notification.notification",
+      "mappedBy": "user_resume"
+    },
+    "portofolio": {
+      "type": "component",
+      "repeatable": true,
+      "component": "portofolio.portofolio"
+    },
+    "certificateUrl": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

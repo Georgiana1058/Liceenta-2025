@@ -25,7 +25,7 @@ import Header from "@/components/header-custom/Header";
 import MultiSelectCombobox from "@/components/ui/MultiSelelctCombobox";
 import SingleSelectCombobox from "@/components/ui/SingleSelectCombobox";
 
-export default function CalendarPage() {
+export default function Calendar() {
   const [events, setEvents] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [users, setUsers] = useState([]);

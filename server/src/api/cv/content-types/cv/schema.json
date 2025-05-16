@@ -52,6 +52,12 @@
       "relation": "oneToOne",
       "target": "api::user-resume.user-resume",
       "inversedBy": "appreovedCVs"
+    },
+    "notifications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::notification.notification",
+      "mappedBy": "cv"
     }
   }
 }

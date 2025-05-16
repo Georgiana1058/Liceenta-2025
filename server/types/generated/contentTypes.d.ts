@@ -523,6 +523,10 @@ export interface ApiCvCv extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::cv.cv'> &
       Schema.Attribute.Private;
+    notifications: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::notification.notification'
+    >;
     publishedAt: Schema.Attribute.DateTime;
     skills: Schema.Attribute.JSON;
     soucerResume: Schema.Attribute.Relation<
@@ -572,6 +576,65 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiNotificationNotification
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'notifications';
+  info: {
+    description: '';
+    displayName: 'Notification';
+    pluralName: 'notifications';
+    singularName: 'notification';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    cv: Schema.Attribute.Relation<'manyToOne', 'api::cv.cv'>;
+    feedbackScore: Schema.Attribute.Integer;
+    interviewDate: Schema.Attribute.DateTime;
+    isRead: Schema.Attribute.Boolean;
+    linkedRecommendationURL: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::notification.notification'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.RichText;
+    organizer: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    participant: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    responseReason: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+    type: Schema.Attribute.Enumeration<
+      [
+        'feedback',
+        'course_sugestion',
+        'interview_offer',
+        'interview_response',
+        'rejection_offer',
+        'accept_offer',
+      ]
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user_resume: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::user-resume.user-resume'
+    >;
+  };
+}
+
 export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
   collectionName: 'user_resumes';
   info: {
@@ -587,6 +650,9 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
     address: Schema.Attribute.String;
     appreovedCVs: Schema.Attribute.Relation<'oneToOne', 'api::cv.cv'>;
     certificates: Schema.Attribute.Component<'certificates.certificates', true>;
+    certificateUrl: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -595,6 +661,7 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
     experience: Schema.Attribute.Component<'experience.experience', true>;
     firstName: Schema.Attribute.String;
     github: Schema.Attribute.Text;
+    isApproved: Schema.Attribute.Boolean;
     jobTitle: Schema.Attribute.String;
     languages: Schema.Attribute.Component<'languages.languages', true>;
     lastName: Schema.Attribute.String;
@@ -605,12 +672,18 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
       'api::user-resume.user-resume'
     > &
       Schema.Attribute.Private;
+    notifications: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::notification.notification'
+    >;
     phone: Schema.Attribute.String;
     photoUrl: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    portofolio: Schema.Attribute.Component<'portofolio.portofolio', true>;
     publishedAt: Schema.Attribute.DateTime;
+    ratingResume: Schema.Attribute.Integer;
     resumeId: Schema.Attribute.String;
     skills: Schema.Attribute.Component<'skills.skills', true>;
     summery: Schema.Attribute.String;
@@ -1113,6 +1186,14 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    notifications_organizator: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::notification.notification'
+    >;
+    notifications_participant: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::notification.notification'
+    >;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -1152,6 +1233,7 @@ declare module '@strapi/strapi' {
       'api::company-announcement.company-announcement': ApiCompanyAnnouncementCompanyAnnouncement;
       'api::cv.cv': ApiCvCv;
       'api::global.global': ApiGlobalGlobal;
+      'api::notification.notification': ApiNotificationNotification;
       'api::user-resume.user-resume': ApiUserResumeUserResume;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

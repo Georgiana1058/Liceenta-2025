@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notifications",
+  "info": {
+    "singularName": "notification",
+    "pluralName": "notifications",
+    "displayName": "Notification",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "richtext"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "feedback",
+        "course_sugestion",
+        "interview_offer",
+        "interview_response",
+        "rejection_offer",
+        "accept_offer"
+      ]
+    },
+    "isRead": {
+      "type": "boolean"
+    },
+    "responseReason": {
+      "type": "string"
+    },
+    "organizer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "notifications_organizator"
+    },
+    "user_resume": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::user-resume.user-resume",
+      "inversedBy": "notifications"
+    },
+    "cv": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cv.cv",
+      "inversedBy": "notifications"
+    },
+    "interviewDate": {
+      "type": "datetime"
+    },
+    "participant": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "notifications_participant"
+    },
+    "feedbackScore": {
+      "type": "integer"
+    },
+    "linkedRecommendationURL": {
+      "type": "text"
+    }
+  }
+}

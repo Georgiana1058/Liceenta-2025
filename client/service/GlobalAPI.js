@@ -42,6 +42,9 @@ const CreateCalendarEvent = (payload) => axiosClient.post('/calendar-events', pa
 const UpdateCalendarEvent = (id, data) => axiosClient.put(`/calendar-events/${id}`, data);
 const DeleteCalendarEvent = (id) => axiosClient.delete(`/calendar-events/${id}`);
 
+
+
+
 // Resume
 const GetUserResumes = (email) => {
   return axiosClient.get(`/user-resumes?filters[userEmail][$eq]=${email}&populate=*`);
@@ -71,6 +74,25 @@ const GetCalendarEventById = (id) =>
   axiosClient.get(`/calendar-events/${id}?populate=participants,cv`);
 
 
+const GetAllNotifications = () => axiosClient.get('/notifications?populate=*');
+const CreateNotification = (payload) => axiosClient.post('/notifications', payload);
+const UpdateNotification = (id, data) => axiosClient.put(`/notifications/${id}`, data);
+const DeleteNotification = (id) => axiosClient.delete(`/notifications/${id}`);
+const GetNotificationById = (id) =>
+  axiosClient.get(`/notifications/${id}?populate=participant,organizer`);
+
+const GetUserResumesRaw = async (email) => {
+  try {
+    const res = await axiosClient.get(`/user-resumes?filters[userEmail][$eq]=${email}&populate=*`)
+    return res?.data?.data || []
+  } catch (err) {
+    console.error("❌ GetUserResumesRaw failed:", err)
+    return []
+  }
+}
+
+
+
 export default {
   CreateNewResume,
   GetUserResumes,
@@ -89,4 +111,10 @@ export default {
   GetAllUsers,
   GetApprovedCVs,
   GetCalendarEventById,
+  GetAllNotifications,
+  CreateNotification,
+  UpdateNotification,
+  DeleteNotification,
+  GetNotificationById,
+  GetUserResumesRaw,
 } 
