@@ -623,6 +623,7 @@ export interface ApiNotificationNotification
         'interview_response',
         'rejection_offer',
         'accept_offer',
+        'approval_request',
       ]
     >;
     updatedAt: Schema.Attribute.DateTime;

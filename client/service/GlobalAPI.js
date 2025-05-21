@@ -67,8 +67,22 @@ const GetApprovedCVs = () => axiosClient.get('/cvs?filters[isApproved][$eq]=true
 
 // Adaugă asta în GlobalAPI.js
 const GetAllUsers = async () => {
-  return axiosClient.get('/users');
+  return axiosClient.get('/users?populate=role');
 };
+
+const GetAllAdmins = async () => {
+  try {
+    const res = await axiosClient.get(
+      '/users?filters[role][name][$eq]=admin&populate=role'
+    );
+    return res;
+  } catch (err) {
+    console.error('❌ GetAllAdmins error:', err.response?.data || err.message);
+    return { data: { data: [] } }; // fallback gol
+  }
+};
+
+
 
 const GetCalendarEventById = (id) =>
   axiosClient.get(`/calendar-events/${id}?populate=participants,cv`);
@@ -90,6 +104,10 @@ const GetUserResumesRaw = async (email) => {
     return []
   }
 }
+
+const GetUserResumeByResumeId = async (resumeId) => {
+  return axiosClient.get(`/user-resumes?filters[resumeId][$eq]=${resumeId}&populate=*`);
+};
 
 
 
@@ -117,4 +135,6 @@ export default {
   DeleteNotification,
   GetNotificationById,
   GetUserResumesRaw,
+  GetUserResumeByResumeId,
+  GetAllAdmins,
 } 

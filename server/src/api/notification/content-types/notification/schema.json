@@ -25,7 +25,8 @@
         "interview_offer",
         "interview_response",
         "rejection_offer",
-        "accept_offer"
+        "accept_offer",
+        "approval_request"
       ]
     },
     "isRead": {

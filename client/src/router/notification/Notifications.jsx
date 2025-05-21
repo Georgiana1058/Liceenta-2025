@@ -45,18 +45,22 @@ function Notifications() {
 
   // 🔹 Creează automat o sugestie AI la fiecare accesare
   useEffect(() => {
-    if (!strapiUser?.email || hasGenerated.current) return;
-  
+    if (
+      !strapiUser?.email ||
+      strapiUser?.role?.name !== "user" || // ✅ verificare rol
+      hasGenerated.current
+    ) return;
+
     const generateCourseSuggestion = async () => {
       hasGenerated.current = true; // ✅ marcat ca generat o singură dată
-  
+
       try {
         console.log("📡 Generăm sugestie AI pentru:", strapiUser.email);
         const resumes = await GlobalAPI.GetUserResumesRaw(strapiUser.email);
-  
+
         let message = "";
         let link = "";
-  
+
         if (!resumes.length) {
           const result = await model.generateContent(
             `Give a short, friendly tip for a student making their first CV. Recommend one beginner-friendly online course.\n\nLINK: https://example.com/course`
@@ -70,28 +74,45 @@ function Notifications() {
           const allSkills = cv.skills || [];
           const allLangs = cv.languages || [];
           const allCerts = cv.certificates || [];
-  
+
           const skillText = allSkills.map(s => `${s.name} (${s.rating}/10)`).join(", ");
           const langText = allLangs.map(l => `${l.languageName} (${l.proficiencyLevel})`).join(", ");
           const certText = allCerts.map(c => `${c.title} - ${c.issuer}`).join(", ");
-  
+
           const prompt = `
   CV Overview:
   - Skills: ${skillText}
   - Languages: ${langText}
   - Certificates: ${certText}
   
-  Based on this, suggest one course (Coursera/Udemy/etc.) to improve employability.
+  Based on this, suggest one course (Coursera/Udemy/freeCodeCamp/The Odin Project/CS50, W3Schools/YouTubeetc) to improve employability.
   ⚠️ Include the course link on a new line starting with: LINK:
   `;
-  
+
           const result = await model.generateContent(prompt);
           const text = await result.response.text();
           const match = text.match(/LINK:\s*(https?:\/\/[^\s)]+)/i);
           link = match?.[1] ?? null;
           message = text.replace(/LINK:\s*https?:\/\/[^\s)]+/i, "").trim();
         }
-  
+
+        // 🔍 Verificăm dacă există deja o sugestie similară pentru utilizator
+        const allNotifications = await GlobalAPI.GetAllNotifications();
+        const alreadyExistsSimilar = allNotifications?.data?.data?.some((n) => {
+          return (
+            n?.type === "course_sugestion" &&
+            n?.participant?.email === strapiUser.email &&
+            n?.linkedRecommendationURL === link &&
+            n?.message?.trim()?.toLowerCase() === message?.trim()?.toLowerCase()
+          );
+        });
+
+        if (alreadyExistsSimilar) {
+          console.log("⏭️ Sugestia AI este deja salvată (aceeași recomandare). Nu o mai adăugăm.");
+          return;
+        }
+
+
         await GlobalAPI.CreateNotification({
           data: {
             title: "Sugestie AI pentru cursuri",
@@ -102,17 +123,17 @@ function Notifications() {
             linkedRecommendationURL: link || "https://www.udemy.com",
           },
         });
-  
+
         console.log("✅ Notificare AI salvată!");
       } catch (err) {
         console.error("❌ Eroare generare sugestie AI:", err);
       }
     };
-  
+
     generateCourseSuggestion();
   }, [strapiUser]);
-  
-  
+
+
 
   // 🗑️ Șterge notificarea din Strapi și din front-end
   const handleMarkAsRead = async (notifId) => {
