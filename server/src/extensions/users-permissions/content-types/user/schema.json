@@ -80,12 +80,6 @@
       "target": "api::company-announcement.company-announcement",
       "mappedBy": "users_permissions_user"
     },
-    "calendar_organizer": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::calendar-event.calendar-event",
-      "mappedBy": "organizer"
-    },
     "cvs": {
       "type": "relation",
       "relation": "oneToMany",
@@ -102,6 +96,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::notification.notification",
+      "mappedBy": "organizer"
+    },
+    "calendar_organizers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::calendar-event.calendar-event",
       "mappedBy": "organizer"
     }
   }

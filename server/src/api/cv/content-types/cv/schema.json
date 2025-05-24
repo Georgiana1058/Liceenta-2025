@@ -29,7 +29,7 @@
     "skills": {
       "type": "json"
     },
-    "experince": {
+    "experience": {
       "type": "json"
     },
     "education": {

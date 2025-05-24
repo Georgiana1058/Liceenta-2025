@@ -27,6 +27,28 @@ module.exports = createCoreController('api::calendar-event.calendar-event', ({ s
     }
   },
 
+  async create(ctx) {
+    try {
+      const { data } = ctx.request.body;
+  
+      const entity = await strapi.entityService.create('api::calendar-event.calendar-event', {
+        data,
+        populate: ['cv', 'participants', 'organizer'],
+      });
+  
+      return { data: entity };
+    } catch (error) {
+      console.error("❌ Create failed:", error);
+      ctx.response.status = 400;
+      return {
+        error: {
+          message: "Create failed",
+          details: error.message || error,
+        },
+      };
+    }
+  }
+,  
   async delete(ctx) {
     const { id } = ctx.params;
     console.log(`🔴 Deleting event with ID: ${id}`);

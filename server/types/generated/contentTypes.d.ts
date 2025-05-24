@@ -436,7 +436,7 @@ export interface ApiCalendarEventCalendarEvent
     modificationContext: Schema.Attribute.Text;
     modificationRequest: Schema.Attribute.Boolean;
     organizer: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
     participants: Schema.Attribute.Relation<
@@ -517,7 +517,7 @@ export interface ApiCvCv extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     education: Schema.Attribute.JSON;
-    experince: Schema.Attribute.JSON;
+    experience: Schema.Attribute.JSON;
     isApproved: Schema.Attribute.Boolean;
     languages: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -617,7 +617,8 @@ export interface ApiNotificationNotification
     title: Schema.Attribute.String;
     type: Schema.Attribute.Enumeration<
       [
-        'feedback',
+        'feedback_positive',
+        'feedback_negative',
         'course_sugestion',
         'interview_offer',
         'interview_response',
@@ -1157,8 +1158,8 @@ export interface PluginUsersPermissionsUser
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    calendar_organizer: Schema.Attribute.Relation<
-      'oneToOne',
+    calendar_organizers: Schema.Attribute.Relation<
+      'oneToMany',
       'api::calendar-event.calendar-event'
     >;
     clerkUserId: Schema.Attribute.String;

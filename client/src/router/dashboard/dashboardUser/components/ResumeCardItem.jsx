@@ -97,6 +97,7 @@ function ResumeCardItem({ resume, refreshData }) {
 
   const themeColor = resume?.themeColor || '#000852'
 
+
   return (
     <div className="relative group">
       <div
@@ -109,6 +110,16 @@ function ResumeCardItem({ resume, refreshData }) {
       </div>
 
       <h2 className="text-center mt-2 font-medium">{resume.title}</h2>
+      {resume.feedbackScore != null && (
+        <div className="text-center mt-1 text-yellow-500">
+          {[...Array(5)].map((_, i) => (
+            <span key={i} className={i < resume.feedbackScore ? '' : 'text-gray-300'}>★</span>
+          ))}
+          <span className="ml-1 text-sm text-gray-600">({resume.feedbackScore}/5)</span>
+        </div>
+      )}
+
+
 
       {resume.isApproved && (
         <p className="text-center text-green-600 text-sm font-medium">✔️ Sent for Approval</p>

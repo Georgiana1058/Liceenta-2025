@@ -2,6 +2,7 @@
 
 module.exports = {
   async handle(ctx) {
+    console.log("📩 Webhook primit:", ctx.request.body);
     const { type, data } = ctx.request.body;
 
     let userObj;

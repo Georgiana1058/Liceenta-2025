@@ -20,7 +20,8 @@
     "type": {
       "type": "enumeration",
       "enum": [
-        "feedback",
+        "feedback_positive",
+        "feedback_negative",
         "course_sugestion",
         "interview_offer",
         "interview_response",

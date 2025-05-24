@@ -48,10 +48,9 @@
     },
     "organizer": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "calendar_organizer",
-      "onDelete": "cascade"
+      "inversedBy": "calendar_organizers"
     },
     "location": {
       "type": "text"
@@ -66,8 +65,7 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::cv.cv",
-      "inversedBy": "calendar_events",
-      "onDelete": "cascade"
+      "inversedBy": "calendar_events"
     },
     "modificationRequest": {
       "type": "boolean"

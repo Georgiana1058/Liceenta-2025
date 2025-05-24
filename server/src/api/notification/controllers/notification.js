@@ -27,6 +27,28 @@ module.exports = createCoreController('api::notification.notification', ({ strap
       };
     }
   },
+  async create(ctx) {
+    const { data } = ctx.request.body;
+  
+    try {
+      const entity = await strapi.entityService.create('api::notification.notification', {
+        data,
+        populate: ['participant', 'organizer', 'cv', 'user_resume'],
+      });
+  
+      return { data: entity };
+    } catch (error) {
+      console.error("❌ Notification create failed:", error);
+      ctx.response.status = 400;
+      return {
+        error: {
+          message: "Create failed",
+          details: error.message || error,
+        },
+      };
+    }
+  },
+  
 
   async delete(ctx) {
     const { id } = ctx.params;

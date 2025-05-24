@@ -17,13 +17,34 @@ function Dashboard() {
   },[user])
 
  /** Returnez lista de cv-uri ->GET */
-  const GetResumeList=()=>{
-    GlobalAPI.GetUserResumes(user?.primaryEmailAddress?.emailAddress).then(resp=>{
 
-      setResumeList(resp.data.data)
-    })
+ const GetResumeList = async () => {
+  try {
+    const resumesRes = await GlobalAPI.GetUserResumes(user?.primaryEmailAddress?.emailAddress);
+    const resumes = resumesRes?.data?.data || [];
 
+    const notifRes = await GlobalAPI.GetAllNotifications();
+    const allNotifications = notifRes?.data?.data || [];
+
+    const enrichedResumes = resumes.map((resume) => {
+      const relatedNotif = allNotifications.find(
+        (notif) =>
+          (notif.type === 'approval_request') &&
+          notif?.user_resume?.documentId === resume.documentId
+      );
+
+      return {
+        ...resume,
+        feedbackScore: relatedNotif?.feedbackScore ?? null,
+      };
+    });
+
+    setResumeList(enrichedResumes);
+  } catch (err) {
+    console.error("❌ Error loading resumes with scores:", err);
   }
+};
+
   return (
     <div>
     <div>

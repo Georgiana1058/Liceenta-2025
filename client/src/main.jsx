@@ -20,6 +20,7 @@ import EditResume from './router/dashboard/dashboardUser/resume/[resumeId]/edit'
 import ViewResume from './router/my-resume/[resumeId]/view'
 import ProtectedRoute from './components/protected-route/ProtectedRoute'
 import UserCalendar from './router/calendar/Calendar'
+import ViewAdmin from './router/dashboard/dashboardAdmin/resumeItem/ViewAdmin'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -87,6 +88,16 @@ const router = createBrowserRouter([
       },
       { path: 'my-resume/:resumeId/view', element: <ViewResume /> },
       { path: '*', element: <Navigate to="/" replace /> },
+
+      {
+        path: 'view-admin/:resumeId',
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <ViewAdmin />
+          </ProtectedRoute>
+        ),
+      },
+      
     ],
   },
 ])
