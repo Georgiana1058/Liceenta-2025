@@ -57,11 +57,10 @@
     "interviewDate": {
       "type": "datetime"
     },
-    "participant": {
+    "participants": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "notifications_participant"
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user"
     },
     "feedbackScore": {
       "type": "integer"

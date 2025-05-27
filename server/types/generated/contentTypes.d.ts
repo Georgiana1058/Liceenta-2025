@@ -512,6 +512,10 @@ export interface ApiCvCv extends Struct.CollectionTypeSchema {
       'api::calendar-event.calendar-event'
     >;
     certification: Schema.Attribute.JSON;
+    companyStatus: Schema.Attribute.Relation<
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
     content: Schema.Attribute.Blocks;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -527,12 +531,10 @@ export interface ApiCvCv extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::notification.notification'
     >;
+    portofolio: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
     skills: Schema.Attribute.JSON;
-    soucerResume: Schema.Attribute.Relation<
-      'oneToOne',
-      'api::user-resume.user-resume'
-    >;
+    soucerResume: Schema.Attribute.String;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -541,6 +543,7 @@ export interface ApiCvCv extends Struct.CollectionTypeSchema {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    volunteering: Schema.Attribute.JSON;
   };
 }
 
@@ -608,8 +611,8 @@ export interface ApiNotificationNotification
       'manyToOne',
       'plugin::users-permissions.user'
     >;
-    participant: Schema.Attribute.Relation<
-      'manyToOne',
+    participants: Schema.Attribute.Relation<
+      'oneToMany',
       'plugin::users-permissions.user'
     >;
     publishedAt: Schema.Attribute.DateTime;
@@ -650,7 +653,6 @@ export interface ApiUserResumeUserResume extends Struct.CollectionTypeSchema {
   };
   attributes: {
     address: Schema.Attribute.String;
-    appreovedCVs: Schema.Attribute.Relation<'oneToOne', 'api::cv.cv'>;
     certificates: Schema.Attribute.Component<'certificates.certificates', true>;
     certificateUrl: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
@@ -1189,10 +1191,6 @@ export interface PluginUsersPermissionsUser
     > &
       Schema.Attribute.Private;
     notifications_organizator: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::notification.notification'
-    >;
-    notifications_participant: Schema.Attribute.Relation<
       'oneToMany',
       'api::notification.notification'
     >;

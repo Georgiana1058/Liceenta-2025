@@ -12,6 +12,9 @@ import { useRef } from "react";
 import FeedbackStars from "../notification/FeedbackStar/FeedbackStar";
 import { toast } from "sonner";
 import Header from "@/components/header-custom/Header";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 function Notifications() {
   const { user } = useUser();
@@ -22,7 +25,11 @@ function Notifications() {
   const [feedbackScores, setFeedbackScores] = useState({});
   const [selectedType, setSelectedType] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [openResponseDialog, setOpenResponseDialog] = useState(false);
+  const [currentInterviewNotif, setCurrentInterviewNotif] = useState(null);
+  const [responseMessage, setResponseMessage] = useState("");
+  const [newInterviewDate, setNewInterviewDate] = useState("");
+  const [responseMode, setResponseMode] = useState("accept");
 
 
 
@@ -45,23 +52,24 @@ function Notifications() {
 
   // 🔁 Funcție reutilizabilă pentru a încărca notificările
   const loadNotifications = async () => {
+    if (!userEmail) return;
+
     try {
-      const res = await GlobalAPI.GetAllNotifications();
-      const allIds = res?.data?.data?.map((n) => n.id) || [];
+      const res = await GlobalAPI.GetAllNotifications(); // get all, cu populate complet
+      const all = res?.data?.data || [];
 
-      const fetched = await Promise.all(
-        allIds.map(async (id) => {
-          const res = await GlobalAPI.GetNotificationById(id);
-          const data = res?.data?.data;
-          return data?.participant?.email === userEmail ? data : null;
-        })
-      );
+      const filtered = all.filter((notif) => {
+        const isParticipant = notif?.participants?.some(p => p?.email === userEmail);
+        const isOrganizer = notif?.organizer?.email === userEmail;
+        return isParticipant || isOrganizer;
+      });
 
-      setNotifications(fetched.filter(Boolean));
+      setNotifications(filtered);
     } catch (err) {
       console.error("❌ Error loading notifications:", err);
     }
   };
+
 
   // 🔹 Inițial, încarcă notificările
   useEffect(() => {
@@ -143,7 +151,7 @@ function Notifications() {
             message,
             type: "course_sugestion",
             isRead: false,
-            participant: strapiUser.id,
+            participants: [strapiUser.id],
             linkedRecommendationURL: link || "https://www.udemy.com",
           },
         });
@@ -238,6 +246,10 @@ function Notifications() {
                     <p className="text-green-600 italic text-sm">Feedback: {notif.responseReason}</p>
                   )}
 
+                  {notif.type === "interview_response" && notif.responseReason && (
+                    <p className="text-blue-800 italic text-sm">Response: {notif.responseReason}</p>
+                  )}
+
                   {notif.linkedRecommendationURL && (
                     <a
                       href={notif.linkedRecommendationURL}
@@ -269,6 +281,21 @@ function Notifications() {
                       </Button>
                     </div>
                   )}
+                  {(notif.type === "interview_offer" || notif.type === "interview_response") && (
+                    <Button
+                      onClick={() => {
+                        setCurrentInterviewNotif(notif);
+                        setResponseMessage(notif.responseReason || "");
+                        setNewInterviewDate(notif.interviewDate || "");
+                        setResponseMode("accept"); // default e accept
+                        setOpenResponseDialog(true);
+
+                      }}
+                      className="text-white rounded-md px-3 py-1 text-sm"
+                    >
+                      Respond to Interview
+                    </Button>
+                  )}
                 </div>
 
                 <Button
@@ -283,9 +310,88 @@ function Notifications() {
             </div>
           ))}
 
-
-
         </div>
+        <Dialog open={openResponseDialog} onOpenChange={setOpenResponseDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{responseMode === "accept" ? "Accept Interview" : "Refuse Interview"}</DialogTitle>
+            </DialogHeader>
+            <Textarea
+              placeholder="Write your message (why you accept/refuse or availability)..."
+              value={responseMessage}
+              onChange={(e) => setResponseMessage(e.target.value)}
+            />
+            {responseMode === "accept" && (
+              <Input
+                type="datetime-local"
+                value={newInterviewDate || ""}
+                onChange={(e) => setNewInterviewDate(e.target.value)}
+                className="mt-2"
+              />
+            )}
+
+            <div className="flex justify-end gap-2 mt-4">
+              <div className="flex gap-2 mb-4">
+                <Button
+                  variant={responseMode === "accept" ? "default" : "outline"}
+                  onClick={() => setResponseMode("accept")}
+                >
+                  Accept
+                </Button>
+                <Button
+                  variant={responseMode === "refuse" ? "default" : "outline"}
+                  onClick={() => {
+                    setResponseMode("refuse");
+                    setNewInterviewDate(""); // ștergem data dacă refuză
+                  }}
+                >
+                  Refuse
+                </Button>
+              </div>
+
+              <Button variant="outline" onClick={() => setOpenResponseDialog(false)}>Cancel</Button>
+              <Button
+                className="bg-green-600 hover:bg-green-700 text-white"
+                onClick={async () => {
+                  if (!responseMessage.trim()) return toast.error("You must write a message.");
+
+                  try {
+                    const oldOrganizerId = currentInterviewNotif.organizer?.id;
+                    const otherParticipants = currentInterviewNotif.participants
+                      ?.filter((p) => p?.id !== strapiUser.id && p?.id !== oldOrganizerId)
+                      ?.map((p) => p.id) || [];
+
+                    const updatedParticipants = [
+                      ...(oldOrganizerId ? [oldOrganizerId] : []),
+                      ...otherParticipants,
+                    ];
+
+                    await GlobalAPI.UpdateNotification(currentInterviewNotif.id, {
+                      data: {
+                        type: "interview_response",
+                        title: "Interview Response",
+                        responseReason: responseMessage,
+                        interviewDate: newInterviewDate || null,
+                        organizer: strapiUser.id,
+                        participants: updatedParticipants.map((id) => ({ id })),
+                      },
+                    });
+
+                    toast.success("✅ Response sent!");
+                    setOpenResponseDialog(false);
+                    loadNotifications();
+                  } catch (err) {
+                    console.error("❌ Error updating interview response:", err);
+                    toast.error("Failed to send response.");
+                  }
+                }}
+              >
+                Send Response
+              </Button>
+
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
 

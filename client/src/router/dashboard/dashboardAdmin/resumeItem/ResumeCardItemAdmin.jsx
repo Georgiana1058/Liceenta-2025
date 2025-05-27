@@ -30,7 +30,7 @@ function ResumeCardItemAdmin({ resume }) {
   return (
     <div className="relative group">
       <div
-        onClick={() => navigate(`/my-resume/${resume?.documentId}/viewAdmin`)}
+        onClick={() => navigate(`/view-admin/${resume?.documentId}`)}
         className="relative h-[280px] rounded-lg border-2 overflow-hidden hover:scale-105 transition-all shadow-lg cursor-pointer"
         style={{ borderColor: themeColor }}
       >
@@ -72,24 +72,7 @@ function ResumeCardItemAdmin({ resume }) {
         </Dialog>
       </div>
 
-      {/* Dropdown menu */}
-      <div className="absolute top-2 right-2 z-10">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button onClick={(e) => e.stopPropagation()}>
-              <MoreVertical className="h-5 w-5 cursor-pointer" color="white" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Options</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate(`/view-admin/${resume?.documentId}`)}
- >
-              View
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+
     </div>
   );
 }

@@ -81,17 +81,17 @@ const CreateNotification = (payload) => axiosClient.post('/notifications', paylo
 const UpdateNotification = (id, data) => axiosClient.put(`/notifications/${id}`, data);
 const DeleteNotification = (id) => axiosClient.delete(`/notifications/${id}`);
 const GetNotificationById = (id) =>
-  axiosClient.get(`/notifications/${id}?populate=participant,organizer`);
+  axiosClient.get(`/notifications/${id}?populate=participants,organizer`);
 
 // CVs
 const GetApprovedCVs = () =>
-  axiosClient.get('/cvs?filters[isApproved][$eq]=true&populate[user][fields][0]=email&populate[fields][0]=title');
+  axiosClient.get('/cvs?filters[isApproved][$eq]=true&populate=companyStatus');
 
 const GetApprovedResumes = async () =>
   axiosClient.get('/user-resumes?filters[isApproved][$eq]=true&populate[notifications][populate]=organizer.role');
 
 // CV (cvs)
-const CreateNewCV = (data) => axiosClient.post('/cvs',{data});
+const CreateNewCV = (data) => axiosClient.post('/cvs', { data });
 const GetAllCVs = () => axiosClient.get('/cvs?populate=*');
 const GetCVById = (id) => axiosClient.get(`/cvs/${id}?populate=*`);
 const UpdateCV = (id, data) => axiosClient.put(`/cvs/${id}`, { data });
@@ -101,6 +101,12 @@ const GetAllCVsByFilter = (params) =>
   axiosClient.get('/cvs', {
     params,
   });
+
+  const UpdateCompanyUserStatus = (companyId, status) =>
+    axiosClient.put(`/users/${companyId}`, {
+      companyStatus: status,
+    });
+
 
 
 export default {
@@ -136,4 +142,6 @@ export default {
   UpdateCV,
   DeleteCV,
   GetAllCVsByFilter,
+  UpdateCompanyUserStatus,
+
 };

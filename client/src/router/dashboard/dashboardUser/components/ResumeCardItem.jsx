@@ -21,12 +21,17 @@ import {
 } from "@/components/ui/alert-dialog"
 import GlobalAPI from '../../../../../service/GlobalAPI'
 import { toast } from 'sonner'
+import { useUser } from '@clerk/clerk-react';
+import { useStrapiUser } from '@/hooks/useStrapiUser';
+
 
 function ResumeCardItem({ resume, refreshData }) {
   const navigate = useNavigate()
   const [openAlert, setOpenAlert] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  const { user } = useUser();
+  const { user: strapiUser } = useStrapiUser(user?.id);
+  
   const onDelete = () => {
     setLoading(true)
     GlobalAPI.DeleteResumeById(resume.documentId)
@@ -45,55 +50,67 @@ function ResumeCardItem({ resume, refreshData }) {
   }
 
   const handleRequestApproval = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const updatePayload = {
-        data: {
-          isApproved: true,
-        },
-      }
-      await GlobalAPI.UpdateResumeDetail(resume.documentId, updatePayload)
-      toast.success("✅ Resume submitted for approval!")
-
-      const allAdminsRes = await GlobalAPI.GetAllAdmins()
-      const admins = allAdminsRes?.data || []
-
-      console.log("✅ Found admins:", admins)
-
+      // 1. Actualizează statusul în resume (isApproved: true)
+      await GlobalAPI.UpdateResumeDetail(resume.documentId, {
+        data: { isApproved: true },
+      });
+      toast.success("✅ Resume submitted for approval!");
+  
+      // 2. Găsește toți adminii
+      const allAdminsRes = await GlobalAPI.GetAllAdmins();
+      const admins = allAdminsRes?.data || [];
+  
       if (!admins.length) {
-        toast.warning("⚠️ No admin found to notify.")
-        return
+        toast.warning("⚠️ No admin found to notify.");
+        return;
       }
-
-      await Promise.all(
-        admins.map(async (admin) => {
-          await GlobalAPI.CreateNotification({
-            data: {
-              title: "New resume submitted for approval",
-              message: `The student ${resume.title} has submitted a resume for review.`,
-              type: "approval_request",
-              isRead: false,
-              organizer: resume.user?.id,
-              participant: admin.id,
-              user_resume: resume.documentId,
-            },
-          })
-        })
-      )
-
+  
+      const adminIds = admins.map((admin) => admin.id);
+  
+      // 3. Găsește organizatorul exact ca în ViewAdmin (fallback după email)
+      let organizerId = strapiUser?.id;
+  
+      if (!organizerId && user?.emailAddresses?.[0]?.emailAddress) {
+        const userEmail = user.emailAddresses[0].emailAddress;
+        const allUsersRes = await GlobalAPI.GetAllUsers();
+        const matched = allUsersRes?.data?.find((u) => u.email === userEmail);
+        if (matched) organizerId = matched.id;
+      }
+  
+      if (!organizerId) {
+        toast.error("❌ Could not determine organizer.");
+        return;
+      }
+  
+      // 4. Creează notificarea pentru toți adminii
+      await GlobalAPI.CreateNotification({
+        data: {
+          title: "New resume submitted for approval",
+          message: `The student ${resume.lastName} ${resume.firstName} has submitted a resume for review.`,
+          type: "approval_request",
+          isRead: false,
+          organizer: organizerId,
+          participants: adminIds.map((id) => ({ id })), // many-to-many corect
+          user_resume: resume.documentId,
+        },
+      });
+  
       toast("📨 Admin notifications sent!", {
         description: "All admins have been notified.",
         duration: 5000,
-      })
-
-      refreshData()
+      });
+  
+      refreshData();
     } catch (err) {
-      console.error("❌ Failed to submit for approval:", err)
-      toast.error("❌ Failed to submit resume for approval.")
+      console.error("❌ Failed to submit for approval:", err);
+      toast.error("❌ Failed to submit resume for approval.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+  
 
   const themeColor = resume?.themeColor || '#000852'
 

@@ -43,8 +43,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "events",
-      "onDelete": "cascade"
+      "inversedBy": "events"
     },
     "organizer": {
       "type": "relation",

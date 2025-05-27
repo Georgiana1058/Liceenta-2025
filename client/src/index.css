@@ -158,20 +158,12 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* tailwind.css sau src/index.css */
-
-.rbc-btn, .rbc-toolbar button {
-  all: revert !important;
-}
-
 
 @layer base {
-  
+  * {
+    @apply border-border outline-ring/50;
+  }
   body {
     @apply bg-background text-foreground;
-  }
-
-  body *:not(.rbc-toolbar *):not(.rbc-btn) {
-    @apply border-border outline-ring/50;
   }
 }

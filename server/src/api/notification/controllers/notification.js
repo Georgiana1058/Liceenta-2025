@@ -12,7 +12,7 @@ module.exports = createCoreController('api::notification.notification', ({ strap
     try {
       const entity = await strapi.entityService.update('api::notification.notification', id, {
         data,
-        populate: ['participant', 'organizer', 'cv', 'user_resume'],
+        populate: ['participants', 'organizer', 'cv', 'user_resume'],
       });
 
       return { data: entity };
@@ -33,7 +33,7 @@ module.exports = createCoreController('api::notification.notification', ({ strap
     try {
       const entity = await strapi.entityService.create('api::notification.notification', {
         data,
-        populate: ['participant', 'organizer', 'cv', 'user_resume'],
+        populate: ['participants', 'organizer', 'cv', 'user_resume'],
       });
   
       return { data: entity };
@@ -74,7 +74,7 @@ module.exports = createCoreController('api::notification.notification', ({ strap
         'api::notification.notification',
         id,
         {
-          populate: ['participant', 'organizer', 'cv', 'user_resume'],
+          populate: ['participants', 'organizer', 'cv', 'user_resume'],
         }
       );
 

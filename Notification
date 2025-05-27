@@ -1,0 +1,82 @@
+1. Structura Collection Type notification (în Strapi)
+Adaugă următoarele câmpuri în notification:
+
+Câmp	Tip	Descriere
+title	Text	Titlul notificării
+message	Rich Text	Mesajul notificării
+type	Enum	feedback, course_suggestion, interview_offer, interview_response, interview_accept, company_rejection
+isRead	Boolean	Dacă notificarea a fost citită
+responseReason	Text	(opțional) motivul refuzului
+user	Relation	Many-to-One cu User (destinatarul notificării)
+cv	Relation	Many-to-One cu Cv (dacă e relevant)
+interviewDate	Datetime	(opțional) data și ora aleasă pentru interviu
+createdAt	Timestamp	Se generează automat
+
+🛠️ 2. Fluxuri de creare notificări
+✅ Admin → Student (feedback)
+js
+Copiază
+Editează
+{
+  title: "Feedback CV",
+  message: "Te rugăm să ajustezi descrierea secțiunii Experiență.",
+  type: "feedback",
+  user: [studentId],
+  cv: [cvId]
+}
+✅ Platformă → Student (recomandare cursuri)
+js
+Copiază
+Editează
+{
+  title: "Sugestii de skill-uri",
+  message: "Îți recomandăm cursul React Avansat pentru a-ți îmbunătăți CV-ul.",
+  type: "course_suggestion",
+  user: [studentId]
+}
+✅ Companie → Student (invitație interviu)
+js
+Copiază
+Editează
+{
+  title: "Invitație interviu",
+  message: "Te invităm la un interviu pentru rolul de Frontend Intern.",
+  type: "interview_offer",
+  user: [studentId],
+  cv: [cvId]
+}
+✅ Student → Companie (refuz cu motiv)
+js
+Copiază
+Editează
+{
+  title: "Refuz interviu",
+  message: "Studentul a refuzat invitația: \"Nu sunt disponibil în perioada propusă.\"",
+  type: "interview_response",
+  user: [companyUserId],
+  responseReason: "Nu sunt disponibil în perioada propusă",
+  cv: [cvId]
+}
+✅ Student → Companie (accept cu oră)
+js
+Copiază
+Editează
+{
+  title: "Accept interviu",
+  message: "Studentul a acceptat interviul. Este disponibil pe 2025-05-23 la ora 15:00.",
+  type: "interview_accept",
+  user: [companyUserId],
+  interviewDate: "2025-05-23T15:00:00Z",
+  cv: [cvId]
+}
+✅ Companie → Student (respingere cu motiv)
+js
+Copiază
+Editează
+{
+  title: "Interviul a fost respins",
+  message: "Din păcate, nu ai fost selectat. Motiv: lipsă experiență relevantă.",
+  type: "company_rejection",
+  user: [studentId],
+  responseReason: "lipsă experiență relevantă"
+}

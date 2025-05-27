@@ -21,6 +21,7 @@ import ViewResume from './router/my-resume/[resumeId]/view'
 import ProtectedRoute from './components/protected-route/ProtectedRoute'
 import UserCalendar from './router/calendar/Calendar'
 import ViewAdmin from './router/dashboard/dashboardAdmin/resumeItem/ViewAdmin'
+import ViewCompany from './router/dashboard/dashboardCompany/cvItem/ViewCompany'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -94,6 +95,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRoles={['admin']}>
             <ViewAdmin />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'view-company/:cvId',
+        element: (
+          <ProtectedRoute allowedRoles={['company']}>
+            <ViewCompany />
           </ProtectedRoute>
         ),
       },

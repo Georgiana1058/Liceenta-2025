@@ -94,12 +94,6 @@
       "repeatable": true,
       "component": "certificates.certificates"
     },
-    "appreovedCVs": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::cv.cv",
-      "mappedBy": "soucerResume"
-    },
     "isApproved": {
       "type": "boolean"
     },

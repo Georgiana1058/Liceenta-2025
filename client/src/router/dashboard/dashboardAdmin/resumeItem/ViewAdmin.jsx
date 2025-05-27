@@ -19,6 +19,17 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 
 function ViewAdmin() {
   const [resumeInfo, setResumeInfo] = useState();
@@ -35,6 +46,13 @@ function ViewAdmin() {
   const [recommendationURL, setRecommendationURL] = useState('');
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   const [recommendationText, setRecommendationText] = useState('');
+  const [submitToCompany, setSubmitToCompany] = useState(false);
+  const [openSendAlert, setOpenSendAlert] = useState(false);
+  const [loadingSend, setLoadingSend] = useState(false);
+  const [openUnapproveDialog, setOpenUnapproveDialog] = useState(false);
+  const [unapproveFeedback, setUnapproveFeedback] = useState('');
+  const [loadingUnapprove, setLoadingUnapprove] = useState(false);
+  const [openConfirmUnapproveAlert, setOpenConfirmUnapproveAlert] = useState(false);
 
 
   useEffect(() => {
@@ -51,81 +69,102 @@ function ViewAdmin() {
     }
   }, [resumeInfo]);
 
-  const CreateCvIfNotExists = async (resumeParam) => {
-    console.log("🧾 [DEBUG] Resume primit:", resumeParam);
-
-    let userId = resumeParam?.user?.id;
-
-    if (!userId && resumeParam?.userEmail) {
-      try {
-        const allUsersRes = await GlobalAPI.GetAllUsers();
-        const match = allUsersRes?.data?.find((u) => u.email === resumeParam.userEmail);
-        if (match) {
-          userId = match.id;
-          console.log("🔗 User matched by email:", match.email, "| ID:", userId);
-        }
-      } catch (err) {
-        console.error("❌ Eroare la căutarea userului după email:", err);
-      }
-    }
-
-    console.log("👤 Final userId:", userId);
-    console.log("🆔 ResumeId:", resumeParam?.id);
-
-    if (!userId || !resumeParam?.id) {
-      console.warn("⚠️ CV cannot be created – missing user or resume ID.");
-      return;
-    }
-
+  const handleSendToCompany = async () => {
+    setLoadingSend(true);
     try {
-      const existing = await GlobalAPI.GetAllCVsByFilter({
-        filters: {
-          soucerResume: {
-            id: {
-              $eq: resumeParam.id,
-            },
-          },
-        },
-      });
+      const sourceResumeId = resumeInfo?.resumeId;
+      const userEmail = resumeInfo?.userEmail;
 
-      const alreadyExists = existing?.data?.data?.length > 0;
-      console.log("📦 CV already exists:", alreadyExists);
-
-      if (alreadyExists) {
-        console.log("ℹ️ CV deja există pentru acest resume. Nu mai creez altul.");
+      if (!userEmail || !sourceResumeId) {
+        toast.error("❌ Cannot send CV: missing user email or resume ID.");
+        setLoadingSend(false);
         return;
       }
 
+      const allUsersRes = await GlobalAPI.GetAllUsers();
+      const matchUser = allUsersRes?.data?.find(u => u.email === userEmail);
+
+      if (!matchUser) {
+        toast.error("❌ User not found in Strapi by email.");
+        setLoadingSend(false);
+        return;
+      }
+
+      const userId = matchUser.id;
+
+      const existing = await GlobalAPI.GetAllCVsByFilter({
+        filters: { soucerResume: { $eq: sourceResumeId } },
+      });
+      const existingCV = existing?.data?.data?.[0];
+
+      const allCompaniesRes = await GlobalAPI.GetAllCompanies();
+      const companies = allCompaniesRes?.data || [];
+
       const payload = {
-        title: resumeParam?.title || "Untitled CV",
+        title: resumeInfo?.title || "Company CV",
         user: userId,
-        isApproved: false,
-        soucerResume: resumeParam.id,
-        content: resumeParam.summery,
-        skills: resumeParam.skills?.map(({ name, rating }) => ({ name, rating })) || [],
-        experience: resumeParam.experience || [],
-        education: resumeParam.education?.map(({ universityName, degree, major, startDate, endDate, description }) => ({
+        isApproved: true,
+        soucerResume: sourceResumeId,
+        content: resumeInfo?.summery || "",
+        skills: resumeInfo.skills?.map(({ name, rating }) => ({ name, rating })) || [],
+        experience: resumeInfo.experience || [],
+        education: resumeInfo.education?.map(({ universityName, degree, major, startDate, endDate, description }) => ({
           universityName, degree, major, startDate, endDate, description
         })) || [],
-        languages: resumeParam.languages?.map(({ languageName, proficiencyLevel }) => ({
+        languages: resumeInfo.languages?.map(({ languageName, proficiencyLevel }) => ({
           languageName, proficiencyLevel
         })) || [],
-        certification: resumeParam.certification?.map(({ name, issuer }) => ({ name, issuer })) || []
+        certification: resumeInfo.certification?.map(({ name, issuer }) => ({ name, issuer })) || [],
+        companyStatus: companies.map(company => company.id), // 👈 Acum e safe
       };
 
 
-      console.log("📤 Payload pregătit pentru POST:", JSON.stringify(payload, null, 2));
+      if (existingCV) {
+        await GlobalAPI.UpdateCV(existingCV.id, payload);
+        toast.success("🔁 CV updated successfully!");
+      } else {
+        await GlobalAPI.CreateNewCV(payload);
+        toast.success("✅ CV successfully sent to company!");
+      }
 
-      const res = await GlobalAPI.CreateNewCV(payload);
-      console.log("✅ CV creat cu succes:", res.data);
-      toast.success("✅ CV saved in database.");
-    } catch (err) {
-      console.error("❌ Eroare la crearea CV-ului:", err.response?.data || err.message || err);
-      toast.error("❌ Failed to save CV.");
+
+      let organizerId = strapiUser?.id;
+      if (!organizerId && user?.emailAddresses?.[0]?.emailAddress) {
+        const match = allUsersRes?.data?.find(u => u.email === user.emailAddresses[0].emailAddress);
+        if (match) organizerId = match.id;
+      }
+
+      if (!organizerId) {
+        toast.error("❌ Cannot determine organizer.");
+        return;
+      }
+
+      if (companies.length > 0) {
+        await GlobalAPI.CreateNotification({
+          data: {
+            title: 'New resume submitted for review (from Admin)',
+            message: `The student ${resumeInfo?.lastName || 'a student'} ${resumeInfo?.firstName || ''} has submitted a resume for review.`,
+            type: 'approval_request',
+            isRead: false,
+            organizer: organizerId,
+            participants: companies.map((company) => ({ id: company.id })), // o singură dată
+            user_resume: resumeInfo?.id,
+            cv: existingCV ? existingCV.id : null,
+          },
+        });
+
+        toast.success(`📢 Notification sent to ${companies.length} compan${companies.length === 1 ? 'y' : 'ies'}!`);
+      }
+
+
+    } catch (error) {
+      console.error("❌ Error sending CV to company:", error);
+      toast.error("❌ Failed to send CV to company.");
+    } finally {
+      setLoadingSend(false);
+      setOpenSendAlert(false);
     }
   };
-
-
 
 
   const GetResumeInfo = async () => {
@@ -166,17 +205,11 @@ function ViewAdmin() {
       const filtered = allNotifs.filter((notif) => {
         if (!notif) return false;
 
-        const participantId = notif?.participant?.id;
         const organizerId = notif?.organizer?.id;
+        const participantIds = notif?.participants?.map(p => p.id) || [];
 
+        const isRelevant = organizerId === strapiUser?.id || participantIds.includes(strapiUser?.id);
 
-        console.log("🔍 Checking notif", notif.id, {
-          participantId,
-          organizerId,
-          currentUserId: strapiUser?.id
-        });
-
-        const isRelevant = participantId === strapiUser?.id || organizerId === strapiUser?.id;
         console.log("🧪 Is relevant?", isRelevant);
         return isRelevant;
       });
@@ -202,7 +235,6 @@ function ViewAdmin() {
 
     try {
       let participantId = resumeInfo?.user?.id;
-
       if (!participantId && resumeInfo?.userEmail) {
         const allUsersRes = await GlobalAPI.GetAllUsers();
         const match = allUsersRes?.data?.find((u) => u.email === resumeInfo.userEmail);
@@ -215,16 +247,23 @@ function ViewAdmin() {
       }
 
       const payload = {
-        title: feedbackMode === 'reject' ? 'CV Rejected' : 'CV Accepted',
+        title: feedbackMode === 'reject' ? 'Negative Feedback' : 'Positive Feedback',
         message: feedbackText,
         type: feedbackMode === 'reject' ? 'feedback_negative' : 'feedback_positive',
         isRead: false,
         user_resume: resumeId,
-        organizer: strapiUser.id,
-        participant: participantId,
+        organizer: strapiUser?.id,
+        participants: [participantId],
         responseReason: feedbackText,
       };
 
+      if (feedbackMode === 'reject') {
+        await GlobalAPI.UpdateResumeDetail(resumeInfo.documentId, {
+          data: {
+            isApproved: null,
+          },
+        });
+      }
 
       if (editingNotification) {
         await GlobalAPI.UpdateNotification(editingNotification.id, { data: payload });
@@ -237,35 +276,13 @@ function ViewAdmin() {
       setOpenDialog(false);
       setFeedbackText('');
       setEditingNotification(null);
-
-      // dacă e feedback pozitiv, creează CV
-      if (feedbackMode === 'accept') {
-        const existing = await GlobalAPI.GetAllCVsByFilter({
-          filters: {
-            soucerResume: {
-              id: {
-                $eq: resumeId,
-              },
-            },
-          },
-        });
-
-        const alreadyExists = existing?.data?.data?.length > 0;
-
-        if (!alreadyExists) {
-          console.log("🟢 Feedback pozitiv -> Creez CV.");
-          await CreateCvIfNotExists(resumeInfo);
-        } else {
-          console.log("⚠️ CV deja există. Nu mai creez.");
-        }
-      }
-
       GetResumeInfo();
     } catch (err) {
       console.error('❌ Error sending feedback:', err);
       toast.error('Error while sending feedback.');
     }
   };
+
 
 
   const handleRecommendationSubmit = async () => {
@@ -295,7 +312,7 @@ function ViewAdmin() {
         isRead: false,
         user_resume: resumeId,
         organizer: strapiUser.id,
-        participant: participantId,
+        participants: [participantId],
         linkedRecommendationURL: recommendationURL,
       };
 
@@ -320,6 +337,7 @@ function ViewAdmin() {
     }
   };
 
+
   return (
     <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
       <div id="no-print">
@@ -330,13 +348,71 @@ function ViewAdmin() {
             <div id="print-area">
               <ResumePreview />
             </div>
-            <div className="flex gap-4 mt-6">
-              <div className="flex gap-4 mt-6">
-                <Button onClick={() => { setFeedbackMode('accept'); setOpenDialog(true); }} className=" bg-green-700 hover:bg-green-600 text-white font-medium rounded-md px-4 py-2">Accept CV</Button>
-                <Button onClick={() => { setFeedbackMode('reject'); setOpenDialog(true); }} className=" bg-red-700 hover:bg-red-900 text-white font-medium rounded-md px-4 py-2">Reject CV</Button>
-                <Button onClick={() => setOpenRecommendationDialog(true)} className="bg-[#14346b] hover:bg-[#16887f] text-white font-medium rounded-md px-4 py-2">Send Recommendation</Button>
+            <div className="mt-6 space-y-4">
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  onClick={() => {
+                    setFeedbackMode("accept");
+                    setOpenDialog(true);
+                  }}
+                  className="bg-green-700 hover:bg-green-600 text-white font-medium rounded-md px-4 py-2"
+                >
+                  Positive Feedback
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    setFeedbackMode("reject");
+                    setOpenDialog(true);
+                  }}
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-md px-4 py-2"
+                >
+                  Negative Feedback
+                </Button>
+
+                <Button
+                  onClick={() => setOpenRecommendationDialog(true)}
+                  className="bg-[#14346b] hover:bg-[#16887f] text-white font-medium rounded-md px-4 py-2"
+                >
+                  Send Recommendation
+                </Button>
+
+                {resumeInfo?.isApproved && (
+                  <Button
+                    onClick={() => setOpenConfirmUnapproveAlert(true)}
+                    className="bg-red-700 hover:bg-red-900 text-white font-medium rounded-md px-4 py-2"
+                  >
+                    Reject & Unapprove CV
+                  </Button>
+
+
+                )}
+
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="confirm-submit-company"
+                    checked={submitToCompany}
+                    onCheckedChange={(checked) => setSubmitToCompany(checked)}
+                  />
+                  <label htmlFor="confirm-submit-company" className="text-sm text-gray-700">
+                    Send CV to Companies
+                  </label>
+                </div>
+
+                {submitToCompany && (
+                  <Button
+                    onClick={() => setOpenSendAlert(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md px-4 py-2"
+                  >
+                    Confirm send to company
+                  </Button>
+                )}
               </div>
             </div>
+
           </div>
 
           <div>
@@ -390,10 +466,6 @@ function ViewAdmin() {
                     <div className="flex flex-col flex-1">
                       <p className="text-lg font-semibold text-[#14346b]">{notif.title}</p>
                       <p className="text-sm text-gray-800 whitespace-pre-wrap">{notif.message}</p>
-
-                      {notif.responseReason && (
-                        <p className="text-xs text-gray-500 italic mt-1">Reason: {notif.responseReason}</p>
-                      )}
 
                       {notif.feedbackScore != null && (
                         <div className="flex items-center mt-1 gap-1 text-yellow-500">
@@ -474,7 +546,7 @@ function ViewAdmin() {
             onChange={(e) => setRecommendationURL(e.target.value)}
             className="mt-3"
           />
-           <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-4">
             <Button onClick={() => setOpenRecommendationDialog(false)} variant="outline">Cancel</Button>
             <Button onClick={handleRecommendationSubmit} className="bg-[#14346b] hover:bg-[#16887f] text-white">
               Send
@@ -482,6 +554,48 @@ function ViewAdmin() {
           </div>
         </DialogContent>
       </Dialog>
+      {/* Send to Company Alert Dialog */}
+      <AlertDialog open={openSendAlert} onOpenChange={setOpenSendAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to send this CV to the company?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action will create a final approved CV visible to companies.
+              Even if some fields are missing, the CV will still be submitted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpenSendAlert(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSendToCompany} disabled={loadingSend}>
+              {loadingSend ? 'Sending...' : 'Send CV'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={openConfirmUnapproveAlert} onOpenChange={setOpenConfirmUnapproveAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to unapprove this resume?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action will mark the resume as unapproved. In the next step, you will be able to write a rejection reason to notify the student.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpenConfirmUnapproveAlert(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setOpenConfirmUnapproveAlert(false);
+                setFeedbackMode("reject"); // activate feedback_negative mode
+                setOpenDialog(true);       // open feedback dialog
+              }}
+            >
+              Continue to rejection feedback
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+
 
     </ResumeInfoContext.Provider>
   );

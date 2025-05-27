@@ -47,17 +47,25 @@
       "target": "api::calendar-event.calendar-event",
       "mappedBy": "cv"
     },
-    "soucerResume": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::user-resume.user-resume",
-      "inversedBy": "appreovedCVs"
-    },
     "notifications": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::notification.notification",
       "mappedBy": "cv"
+    },
+    "soucerResume": {
+      "type": "string"
+    },
+    "portofolio": {
+      "type": "json"
+    },
+    "volunteering": {
+      "type": "json"
+    },
+    "companyStatus": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

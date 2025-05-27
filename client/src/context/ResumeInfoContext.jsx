@@ -26,6 +26,7 @@ export function ResumeInfoProvider({ children }) {
     volunteering: [], // new section for volunteering
     languages:   [], // new section for languages
     certificates: [], // new section for certificates
+    portofolio: [],
   };
 
   const [resumeInfo, setResumeInfo] = useState(defaultResume);
