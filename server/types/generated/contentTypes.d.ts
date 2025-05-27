@@ -470,28 +470,41 @@ export interface ApiCompanyAnnouncementCompanyAnnouncement
     draftAndPublish: false;
   };
   attributes: {
+    applicationDeadline: Schema.Attribute.DateTime;
+    benefits: Schema.Attribute.String;
     content: Schema.Attribute.RichText;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    dislike: Schema.Attribute.Integer;
+    dislikedByUsers: Schema.Attribute.Text;
     expiryDate: Schema.Attribute.Date;
     isActive: Schema.Attribute.Boolean;
+    isOpen: Schema.Attribute.Boolean;
+    jobDescription: Schema.Attribute.Text;
+    jobTitle: Schema.Attribute.String;
+    jobType: Schema.Attribute.String;
+    like: Schema.Attribute.Integer;
+    likedByUsers: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::company-announcement.company-announcement'
     > &
       Schema.Attribute.Private;
-    priority: Schema.Attribute.Enumeration<['urgent', 'normal', 'low']>;
+    locations: Schema.Attribute.Component<'locations.locations', true>;
+    nameCompany: Schema.Attribute.String;
+    photoCompany: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
     publishedAt: Schema.Attribute.DateTime;
+    requirements: Schema.Attribute.Text;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    users_permissions_user: Schema.Attribute.Relation<
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
+    user: Schema.Attribute.String;
   };
 }
 
@@ -1165,10 +1178,6 @@ export interface PluginUsersPermissionsUser
       'api::calendar-event.calendar-event'
     >;
     clerkUserId: Schema.Attribute.String;
-    company_announcements: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::company-announcement.company-announcement'
-    >;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;

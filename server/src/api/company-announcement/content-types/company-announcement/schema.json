@@ -17,25 +17,66 @@
     "content": {
       "type": "richtext"
     },
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "company_announcements"
-    },
     "isActive": {
       "type": "boolean"
     },
     "expiryDate": {
       "type": "date"
     },
-    "priority": {
-      "type": "enumeration",
-      "enum": [
-        "urgent",
-        "normal",
-        "low"
+    "jobTitle": {
+      "type": "string"
+    },
+    "jobDescription": {
+      "type": "text"
+    },
+    "jobType": {
+      "type": "string"
+    },
+    "isOpen": {
+      "type": "boolean"
+    },
+    "applicationDeadline": {
+      "type": "datetime"
+    },
+    "photoCompany": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
       ]
+    },
+    "locations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "locations.locations"
+    },
+    "nameCompany": {
+      "type": "string"
+    },
+    "like": {
+      "type": "integer"
+    },
+    "dislike": {
+      "type": "integer"
+    },
+    "likedByUsers": {
+      "type": "text"
+    },
+    "dislikedByUsers": {
+      "type": "text"
+    },
+    "user": {
+      "type": "string"
+    },
+    "requirements": {
+      "type": "text"
+    },
+    "benefits": {
+      "type": "string"
     }
   }
 }

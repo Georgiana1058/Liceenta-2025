@@ -65,7 +65,7 @@ const router = createBrowserRouter([
       {
         path: 'dashboard/calendar',
         element: (
-          <ProtectedRoute allowedRoles={['user', 'company']}>
+          <ProtectedRoute allowedRoles={['user', 'company','admin']}>
             <UserCalendar />
           </ProtectedRoute>
         ),

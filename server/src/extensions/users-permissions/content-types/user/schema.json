@@ -74,12 +74,6 @@
       "target": "api::calendar-event.calendar-event",
       "mappedBy": "participants"
     },
-    "company_announcements": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::company-announcement.company-announcement",
-      "mappedBy": "users_permissions_user"
-    },
     "cvs": {
       "type": "relation",
       "relation": "oneToMany",

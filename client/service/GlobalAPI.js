@@ -102,10 +102,39 @@ const GetAllCVsByFilter = (params) =>
     params,
   });
 
-  const UpdateCompanyUserStatus = (companyId, status) =>
-    axiosClient.put(`/users/${companyId}`, {
-      companyStatus: status,
-    });
+const UpdateCompanyUserStatus = (companyId, status) =>
+  axiosClient.put(`/users/${companyId}`, {
+    companyStatus: status,
+  });
+//Company-announcement
+const GetAllCompanyAnnouncements = () =>
+  axiosClient.get('/company-announcements?populate=*');
+
+
+const CreateCompanyAnnouncement = (data) =>
+  axiosClient.post('/company-announcements', data);
+
+const UpdateCompanyAnnouncement = (id, data) => {
+  console.log("📤 API CALL TO STRAPI", id, data);
+  return axiosClient.put(`/company-announcements/${id}`, data);
+};
+
+
+const DeleteCompanyAnnouncement = (id) =>
+  axiosClient.delete(`/company-announcements/${id}`);
+
+const GetCompanyAnnouncementById = (id) =>
+  axiosClient.get(`/company-announcements/${id}?populate=*`);
+
+const IncrementLike = (id, currentLikes) =>
+  axiosClient.put(`/company-announcements/${id}`, {
+    data: { like: currentLikes + 1 }
+  });
+
+const IncrementDislike = (id, currentDislikes) =>
+  axiosClient.put(`/company-announcements/${id}`, {
+    data: { dislike: currentDislikes + 1 }
+  });
 
 
 
@@ -143,5 +172,12 @@ export default {
   DeleteCV,
   GetAllCVsByFilter,
   UpdateCompanyUserStatus,
+  GetAllCompanyAnnouncements,
+  CreateCompanyAnnouncement,
+  UpdateCompanyAnnouncement,
+  DeleteCompanyAnnouncement,
+  GetCompanyAnnouncementById,
+  IncrementLike,
+  IncrementDislike,
 
 };

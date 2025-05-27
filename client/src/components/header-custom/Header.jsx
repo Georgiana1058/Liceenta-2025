@@ -37,11 +37,10 @@ export default function Header() {
       </Link>
       {isSignedIn ? (
         <nav className="flex items-center gap-4">
-          {(role === 'user' || role === 'company') && (
             <Link to="/dashboard/calendar">
               <Button className="text-white hover:brightness-110">Calendar</Button>
             </Link>
-          )}
+          
           <Link to="/dashboard/notifications">
             <Button className="text-white hover:brightness-110">Notifications</Button>
           </Link>

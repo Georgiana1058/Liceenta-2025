@@ -65,6 +65,20 @@ export interface LanguagesLanguages extends Struct.ComponentSchema {
   };
 }
 
+export interface LocationsLocations extends Struct.ComponentSchema {
+  collectionName: 'components_locations_locations';
+  info: {
+    displayName: 'locations';
+  };
+  attributes: {
+    address: Schema.Attribute.String;
+    city: Schema.Attribute.String;
+    country: Schema.Attribute.String;
+    lat: Schema.Attribute.Decimal;
+    lng: Schema.Attribute.Decimal;
+  };
+}
+
 export interface PortofolioPortofolio extends Struct.ComponentSchema {
   collectionName: 'components_portofolio_portofolios';
   info: {
@@ -170,6 +184,7 @@ declare module '@strapi/strapi' {
       'education.education': EducationEducation;
       'experience.experience': ExperienceExperience;
       'languages.languages': LanguagesLanguages;
+      'locations.locations': LocationsLocations;
       'portofolio.portofolio': PortofolioPortofolio;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;
