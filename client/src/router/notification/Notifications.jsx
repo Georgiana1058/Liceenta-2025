@@ -281,7 +281,7 @@ function Notifications() {
                       </Button>
                     </div>
                   )}
-                  {(notif.type === "interview_offer" || notif.type === "interview_response") && (
+                  {(notif.type === "interview_offer" || notif.type === "interview_response") && strapiUser?.role?.name === "user" && (
                     <Button
                       onClick={() => {
                         setCurrentInterviewNotif(notif);

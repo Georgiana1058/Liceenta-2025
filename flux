@@ -40,6 +40,7 @@ Dacă compania cere reprogramare, primește intervale alternative în notificăr
 ✍️ Poate trimite feedback personalizat pentru fiecare CV.
 
 📚 Poate trimite recomandări de cursuri și sugestii de îmbunătățire a skill-urilor.
+Trimite CV catre companii daca le cons
 
 🏢 COMPANY – rol: company
 🆕 Funcționalități de implementat:

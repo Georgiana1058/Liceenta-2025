@@ -223,10 +223,18 @@ function Home() {
 
   return (
     <div className="relative w-screen min-h-screen overflow-auto bg-white">
-      <div className="relative h-[60vh]">
-        <img src="/image.png" alt="Fundal Home" className="absolute w-full h-full object-cover z-0" />
-        <div className="relative z-10"><Header /></div>
+      <div className="bg-white">
+        <Header />
+        <div className="w-full flex justify-center py-6">
+          <img
+            src="/image.png"
+            alt="Imagine student"
+            className="max-w-[700px] w-full h-auto rounded-md shadow-md"
+          />
+        </div>
       </div>
+
+
 
       <div className="relative z-20 bg-white px-8 py-10">
         <h2 className="text-3xl font-bold text-[#14346b] mb-6">Latest Job Announcements</h2>
